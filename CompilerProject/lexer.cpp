@@ -63,44 +63,66 @@ bool isFinalState(States state){
     return finalStates.find(state) != finalStates.end();
 }
 
-vector <token> tokenizer(const string& input){ //Passing by reference 
+
+vector<token> tokenizer(const string& input) {
     vector<token> tokens;
-    string currentTokens;
+    string currentToken;
     States currentState = START;
+    size_t index = 0;
+
+    while (index < input.length()) {
+        char c = input[index]; 
+        Input nextInput = characterInput(c); // Categorize the input character
+        States nextState = static_cast<States>(FSA_TABLE[currentState][nextInput]); // Determine the next state
+
+        // If the character is not a space, or if transitioning from a final state, accumulate it
+        if (!isspace(c)) {
+            currentToken += c;
+            cout<<currentToken<< " FSA :"<<currentState<<" "<< nextInput << " Next state "<< nextState<<endl;
+        }
+
+        // When encountering a final state or a delimiter (space/newline), finalize the token??? maybe change
+        if ((isFinalState(nextState) || isspace(c)) && !currentToken.empty()) {
 
 
-    cout<<input<<endl;
-    for(char c: input + " "){
-        cout<<characterInput(c);
-        Input nextInput = characterInput(c);
-        cout<<nextInput<<endl;
-        
-        
-        //Debug
-        cout<<c;
-
-        States nextState = static_cast<States>(FSA_TABLE[currentState][nextInput]);
-        cout<<nextState<<endl;
-        cout<<currentTokens<<" "<<currentState<<endl;
-        if(isFinalState(nextState)){
-            if(!currentTokens.empty()){
-                tokens.push_back(token{currentTokens, getTokenClass (currentState)});
-                cout<<currentTokens<<endl;
-                currentTokens.clear();
-                nextState =START;
+            //Since FinalVar and Integer are triggered by any input we have to do print the nexState classification
+            //instead of the current state; 
+            if(isFinalState(nextState) == FINALVARIABLE || isFinalState (nextState) || INTEGER )
+            {
+                tokens.push_back(token{currentToken, getTokenClass(nextState)}); // Save the token
+                currentToken.clear(); // Reset for the next token, clearts the accumulator
+                nextState = START;  // after finalizing token, need nexState to start at 0 again, so is passed to the current State
             }
-            
-            if(nextState == ERROR){
-                cout<<"Error"<<endl;
-                break;
+
+            if(isFinalState(nextState) == FINALVARIABLE || isFinalState (nextState) || INTEGER )
+            {
+                tokens.push_back(token{currentToken, getTokenClass(nextState)}); // Save the token
+                currentToken.clear(); // Reset for the next token, clearts the accumulator
+                nextState = START;  // after finalizing token, need nexState to start at 0 again, so is passed to the current State
             }
+
+
+
+
+
+
+
+            tokens.push_back(token{currentToken, getTokenClass(currentState)}); // Save the token
+            currentToken.clear(); // Reset for the next token, clearts the accumulator
+            nextState = START; 
+        }
+
+        // If an error state is encountered, report and stop processing
+        if (nextState == ERROR) {
+            cout << "Error encountered." << endl;
+            break;
         }
         
-        currentState = nextState;
-
-        currentTokens += c;
-        
+        currentState = nextState; // Update the state
+        ++index; // Move to the next character
     }
-    //cout<<tokens<<endl;
+
+
+
     return tokens;
 }

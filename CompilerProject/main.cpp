@@ -6,13 +6,13 @@ using namespace std;
 
 int main(){
     //ofstream myfile("tokens");
-    string a = "a + b";
+    string a = "hello world";
     initFSA();
     cout<<"please enter a character: "<<endl;
     
     vector<token> tokens =tokenizer(a);
     for(const auto& token: tokens){
-        cout<<"Tokens: "<<token.value<<", type: "<< token.classification<<endl;
+        cout<<"Token "<<token.value<<" type: "<< token.classification<<endl;
     }
     
 
