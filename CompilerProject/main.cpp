@@ -1,14 +1,19 @@
 #include <iostream>
 #include <fstream>
 #include "FSA.h"
+#include <vector>
 using namespace std;
 
 int main(){
     //ofstream myfile("tokens");
-    char a;
+    string a = "a + b";
     initFSA();
     cout<<"please enter a character: "<<endl;
-    cin>> a;
-    cout<<characterInput(a)<<endl;
     
+    vector<token> tokens =tokenizer(a);
+    for(const auto& token: tokens){
+        cout<<"Tokens: "<<token.value<<", type: "<< token.classification<<endl;
+    }
+    
+
 }

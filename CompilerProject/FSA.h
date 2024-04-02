@@ -1,6 +1,9 @@
 #ifndef FSA_H
 #define FSA
-#include <vector>;//remove later 
+#include <string>
+#include <vector>
+using namespace std;
+
 
 enum Input{
     LETTER,
@@ -61,7 +64,7 @@ enum States{
 
 };
 
-int FSA_TABLE[count_State][COUNT] ={}; //2D array
+extern int FSA_TABLE[count_State][COUNT]; //2D array
 
 void initFSA();
 Input characterInput(char c);
@@ -71,11 +74,10 @@ Input characterInput(char c);
 
 
 struct token{
-    string type;
     string value;
+    string classification;
     
 };
 
-vector<token> tokenize(string& string);
-
+vector<token> tokenizer(const string& input);
 #endif

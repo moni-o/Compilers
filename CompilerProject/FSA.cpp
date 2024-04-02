@@ -4,7 +4,7 @@
 #include <cctype>
 using namespace std;
 
-
+int FSA_TABLE[count_State][COUNT] ={};
 
 int width = 6;
 
@@ -277,6 +277,7 @@ Input characterInput(char c){
     case '=': return EQUAL;
     case '<': return LESSTHAN;
     case '>': return GREATHERTHAN;
+    case '+': return PLUS;
     case '-': return MINUS;
     case ',': return COMMA;
     case '{': return LEFTBRACE;
