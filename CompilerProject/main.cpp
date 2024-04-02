@@ -6,7 +6,7 @@ using namespace std;
 
 int main(){
     //ofstream myfile("tokens");
-    string a = "hello world";
+    string a = "hello world + / hello this is ";
     initFSA();
     cout<<"please enter a character: "<<endl;
     

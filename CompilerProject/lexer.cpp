@@ -70,7 +70,7 @@ vector<token> tokenizer(const string& input) {
     States currentState = START;
     size_t index = 0;
 
-    while (index < input.length()) {
+    while (index <= input.length()) {
         char c = input[index]; 
         Input nextInput = characterInput(c); // Categorize the input character
         States nextState = static_cast<States>(FSA_TABLE[currentState][nextInput]); // Determine the next state
@@ -93,23 +93,11 @@ vector<token> tokenizer(const string& input) {
                 currentToken.clear(); // Reset for the next token, clearts the accumulator
                 nextState = START;  // after finalizing token, need nexState to start at 0 again, so is passed to the current State
             }
-
-            if(isFinalState(nextState) == FINALVARIABLE || isFinalState (nextState) || INTEGER )
-            {
-                tokens.push_back(token{currentToken, getTokenClass(nextState)}); // Save the token
+            else{
+                tokens.push_back(token{currentToken, getTokenClass(currentState)}); // Save the token
                 currentToken.clear(); // Reset for the next token, clearts the accumulator
-                nextState = START;  // after finalizing token, need nexState to start at 0 again, so is passed to the current State
+                nextState = START; 
             }
-
-
-
-
-
-
-
-            tokens.push_back(token{currentToken, getTokenClass(currentState)}); // Save the token
-            currentToken.clear(); // Reset for the next token, clearts the accumulator
-            nextState = START; 
         }
 
         // If an error state is encountered, report and stop processing
@@ -117,7 +105,7 @@ vector<token> tokenizer(const string& input) {
             cout << "Error encountered." << endl;
             break;
         }
-        
+
         currentState = nextState; // Update the state
         ++index; // Move to the next character
     }
