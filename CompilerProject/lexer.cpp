@@ -36,7 +36,7 @@ string getTokenClass(States state){
     }
 }
 
-bool isFinalState(States state){
+bool isFinalState(States state){ //Dont need it anymore???
     static const std:: set <States> finalStates = {
         ERROR,
         MOP,
@@ -72,45 +72,65 @@ vector<token> tokenizer(const string& input) {
 
     while (index <= input.length()) {
         char c = input[index]; 
-        Input nextInput = characterInput(c); // Categorize the input character
-        States nextState = static_cast<States>(FSA_TABLE[currentState][nextInput]); // Determine the next state
+        Input nextInput = characterInput(c); //gives next input, calls the characterInput
+        States nextState = static_cast<States>(FSA_TABLE[currentState][nextInput]); // Determine the next state, assign to nextState
 
-        // If the character is not a space, or if transitioning from a final state, accumulate it
-        if (!isspace(c)) {
-            currentToken += c;
-            cout<<currentToken<< " FSA :"<<currentState<<" "<< nextInput << " Next state "<< nextState<<endl;
+     switch (nextInput) {
+            case WS:  
+                if (!currentToken.empty()) {
+                    tokens.push_back({currentToken, getTokenClass(nextState)});
+                    currentToken.clear();
+                }
+                currentState = START;
+                break;
+
+            case COMMA:
+            case LEFTBRACE:
+            case RIGHTBRACE:
+            case SEMICOLON:
+                if (!currentToken.empty()) {
+                    tokens.push_back({currentToken, getTokenClass(nextState)});
+                    currentToken.clear();
+                    currentState = START;
+                }
+                // Treat the delimiter itself as a token
+                nextState = static_cast<States>(FSA_TABLE[currentState][nextInput]); // Determine the next state
+                tokens.push_back({string(1, c), getTokenClass(nextState)});
+                currentState = START;  // Reset state after handling a delimiter
+                break;
+            case ASTERICK:
+            case PLUS:
+            case MINUS:
+                if (!currentToken.empty()) {
+                    tokens.push_back({currentToken, getTokenClass(nextState)});
+                    currentToken.clear();
+                    currentState = START;
+                }
+                // Treat the delimiter itself as a token
+                nextState = static_cast<States>(FSA_TABLE[currentState][nextInput]); // Determine the next state
+                tokens.push_back({string(1, c), getTokenClass(nextState)});
+                currentState = START;  // Reset state after handling a delimiter
+                break;
+            default:
+                // For other characters, accumulate if not transitioning to a final state
+                if (!isFinalState(nextState) || currentState == nextState) {
+                    currentToken += c;
+                }
+                if (isFinalState(nextState)) {
+                    // finalize token if transitioning to a final state
+                    if (!currentToken.empty()) {
+                        tokens.push_back({currentToken, getTokenClass(currentState)});
+                        currentToken.clear();
+                    }
+                    currentState = START;
+                } else {
+                    currentState = nextState;  // Proceed with next state transition
+                }
+                break;
         }
 
-        // When encountering a final state or a delimiter (space/newline), finalize the token??? maybe change
-        if ((isFinalState(nextState) || isspace(c)) && !currentToken.empty()) {
-
-
-            //Since FinalVar and Integer are triggered by any input we have to do print the nexState classification
-            //instead of the current state; 
-            if(isFinalState(nextState) == FINALVARIABLE || isFinalState (nextState) || INTEGER )
-            {
-                tokens.push_back(token{currentToken, getTokenClass(nextState)}); // Save the token
-                currentToken.clear(); // Reset for the next token, clearts the accumulator
-                nextState = START;  // after finalizing token, need nexState to start at 0 again, so is passed to the current State
-            }
-            else{
-                tokens.push_back(token{currentToken, getTokenClass(currentState)}); // Save the token
-                currentToken.clear(); // Reset for the next token, clearts the accumulator
-                nextState = START; 
-            }
-        }
-
-        // If an error state is encountered, report and stop processing
-        if (nextState == ERROR) {
-            cout << "Error encountered." << endl;
-            break;
-        }
-
-        currentState = nextState; // Update the state
-        ++index; // Move to the next character
+        index++;  // Move to the next character
     }
-
-
 
     return tokens;
 }
