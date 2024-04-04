@@ -10,9 +10,9 @@ int main(){
 
     initFSA();
    
-    string a = "Class PRGM1{ CONST M = 7, n N = 85; VAR X, Y, Z; X = M + Y * Z; X = M + Y * Z + 12;} ";
+    string a = "hello";
 
-    string filePath = "trial.txt"; // Path to the file to read
+    string filePath = "Pgm1.txt"; // Path to the file to read
     ifstream file(filePath);
     stringstream buffer;
 
@@ -31,7 +31,7 @@ int main(){
 
    vector<token> tokens =tokenizer(input);
     for(const auto& token: tokens){
-        cout<<"Token "<<token.value<<" type: "<< token.classification<<endl;
+        cout<<token.value<<" type: "<< token.classification<<endl;
     }
     
 
