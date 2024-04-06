@@ -1,5 +1,5 @@
 #ifndef FSA_H
-#define FSA
+#define FSA_H
 #include <string>
 #include <vector>
 using namespace std;
@@ -67,11 +67,6 @@ enum States{
 extern int FSA_TABLE[count_State][COUNT]; //2D array
 
 void initFSA();
-Input characterInput(char c);
-
-
-//Lexer.H for later usage change 
-
 
 struct token{
     string value;
@@ -79,5 +74,10 @@ struct token{
     
 };
 
+
+//Lexer.H for later usage change 
+Input characterInput(char c);
 vector<token> tokenizer(const string& input);
+bool isReserved(string& c);
+
 #endif

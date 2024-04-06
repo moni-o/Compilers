@@ -1,0 +1,6 @@
+Class PRGM1{
+    CONST M = 7, n N = 85;
+    VAR X, Y, Z;
+    X = M + Y * Z;
+    X = M + Y * Z + 12;
+}

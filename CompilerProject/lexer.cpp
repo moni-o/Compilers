@@ -64,6 +64,26 @@ bool isFinalState(States state){ //Dont need it anymore???
     };
     return finalStates.find(state) != finalStates.end();
 }
+bool isReserved(string& c){
+    static const std::set< string> reservedWord ={
+        "CONST",
+        "IF",
+        "VAR",
+        "THEN",
+        "PRODECURE",
+        "WHILE",
+        "CALL",
+        "DO",
+        "ODD",
+        "CLASS",
+    };
+    if(reservedWord.find(c)!= reservedWord.end()){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 
 vector<token> tokenizer(const string& input) {
@@ -108,8 +128,13 @@ vector<token> tokenizer(const string& input) {
                 currentState = nextState;
                 index++;
                 break;
-            case FINALVARIABLE: 
+            case FINALVARIABLE:
+                if(isReserved(currentToken)){
+                tokens.push_back({currentToken, currentToken}); 
+                }
+                else{
                 tokens.push_back({currentToken, getTokenClass(nextState)});
+                }
                 currentToken.clear();
                 currentState = START;
                 break;
@@ -260,6 +285,6 @@ vector<token> tokenizer(const string& input) {
                 break;
             }
         }
-
+    tokens.push_back({"EOF","EOF"});
     return tokens;
 }
