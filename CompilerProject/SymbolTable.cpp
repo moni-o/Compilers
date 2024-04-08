@@ -10,6 +10,7 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
     string currentToken;
     SymbolStates currentState = Start;
     int addr = 0;
+    int caddr = 0; //code address
     
 
     for(int i =0; i < tokens.size(); i++) {
@@ -30,7 +31,7 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
                 break;
             case PGM_Final:
                 currentToken = tokens[i].value;
-                tableEntry.push_back({currentToken, "Pogram name", " " ,addr, "CS"});
+                tableEntry.push_back({currentToken, "Pogram name", " " ,caddr, "CS"});
                 cout<<currentToken<<" Pogram name"<<endl;
                 currentState = nextState;
                 break;
@@ -77,9 +78,9 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
             case EOF_STATE:
                 currentState = nextState;
                 tableEntry.push_back({"Temp1", "Var (int)", "?", addr, "DS"});
-                addr+2;
+                addr +=2;
                 tableEntry.push_back({"Temp2", "Var (int)", "?",addr, "DS"});
-                addr+2;
+                addr+=2;
                 tableEntry.push_back({"Temp3", "Var (int)", "?", addr, "DS"});
                 break;
             default:
