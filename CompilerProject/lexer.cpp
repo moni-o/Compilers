@@ -76,6 +76,8 @@ bool isReserved(string& c){
         "DO",
         "ODD",
         "CLASS",
+        "CIN",
+        "COUT",
     };
     if(reservedWord.find(c)!= reservedWord.end()){
         return true;
