@@ -8,9 +8,10 @@ using namespace std;
 
 
 //Header file for Syntax 
+//table is a square matrix 
 enum predenceInput{
     terminator,
-    equal_input,
+    assignment,
     plus_input,
     minus_input,
     leftP,
@@ -22,7 +23,7 @@ enum predenceInput{
     while_input,
     do_input,
     odd_input,
-    assignment,
+    equal_input,
     not_equal,
     greather_than,
     less_than,
@@ -36,39 +37,12 @@ enum predenceInput{
     predence_count,
 };
 
-enum precedenceStates{
-    terminator_state,
-    assigment_state,
-    plus_state,
-    minus_state,
-    leftP_state,
-    rightP_state,
-    multiplication_state,
-    division_state,
-    if_state,
-    then_state,
-    while_state,
-    do_state,
-    odd_state,
-    equal_state,
-    not_equal_state,
-    less_than_state,
-    greather_than_state,
-    greather_equal_state,
-    lessEqual_state,
-    left_brace_state,
-    right_brace_state,
-    call_state,
-    cin_state,
-    cout_state,
-    precedenceStates_count,
-};
+
 
 //2D array for Predence Operator Table Declaration,
-extern int PO_TABLE[precedenceStates_count][predence_count];
+extern int PO_TABLE[predence_count][predence_count];
 void ini_PO_TABLE();
 void parseTokens(vector<token>& t);
-precedenceStates mapTokeToState(token& token);
 predenceInput maptToInput(token& token);
 
 #endif

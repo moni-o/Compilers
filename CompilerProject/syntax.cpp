@@ -9,12 +9,7 @@ using namespace std;
 
 
 
-precedenceStates mapTokeToState(token& token){
-   if(token.value == "=") return assigment_state;
-   if(token.value == "+") return plus_state;
-    return terminator_state;
 
-    }
 predenceInput maptToInput(token& token){
     if(token.value == "=")return equal_input;
     if(token.value == "+")return plus_input;
