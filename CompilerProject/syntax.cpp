@@ -25,6 +25,7 @@ void parseTokens(vector<token>& tokens){
     stack<token> tokenStack;
     bool startParsing = false;
     size_t index = 0;  // Index to track the current token
+    token top;
 
 
 
@@ -38,15 +39,53 @@ void parseTokens(vector<token>& tokens){
       
        if(startParsing){
 
-        if(tokens[i].value == "+" ){
-           
-            cout<<"The plus is in here"<<endl;
-            cout<<tokens[i].value<<endl;
-            
+        if(tokens[i].value == "=" ){
+            if (!tokenStack.empty()) {
+                    precedenceStates state = mapTokeToState(tokenStack.top());
+                    predenceInput input = maptToInput(tokens[i]);
+                    top = tokens[i];
+                    int action = PO_TABLE[state][input];
+                    cout<<state<<input<<endl;
+                    cout<< action<<endl;
+                    switch(action){
+                        case 1: 
+                        case 2: tokenStack.push(tokens[i]);
+                                cout<<"The "<<tokens[i].value<< " being pushed"<<endl;
+                                break;
+                        case 3: cout<<"need to pop somehow"<<endl;
+                    }
+            }
         }
-        else if(tokens[i].value == "="){
-            cout<<"The = is in here"<<endl;
-        }
+        else if(tokens[i].value == "+"){
+          if (!tokenStack.empty()) {
+                    precedenceStates state = mapTokeToState(top);
+                    predenceInput input = maptToInput(tokens[i]);
+                    int action = PO_TABLE[state][input];
+                    cout<<state<<input<<endl;
+                    cout<< action<<endl;
+                    switch(action){
+                        case 1: 
+                        case 2: tokenStack.push(tokens[i]);
+                                cout<<"The "<<tokens[i].value<< " being pushed"<<endl;
+                                break;
+                        case 3: cout<<"need to pop somehow"<<endl;
+                    }
+        }}
+        else if(tokens[i].value == ";"){
+          if (!tokenStack.empty()) {
+                    precedenceStates state = mapTokeToState(top);
+                    predenceInput input = terminator;
+                    int action = PO_TABLE[state][input];
+                    cout<<state<<input<<endl;
+                    cout<< action<<endl;
+                    switch(action){
+                        case 1: 
+                        case 2: tokenStack.push(tokens[i]);
+                                cout<<"The "<<tokens[i].value<< " being pushed"<<endl;
+                                break;
+                        case 3: cout<<"need to pop somehow"<<endl;
+                            
+                    }}}
         else{
             tokenStack.push(tokens[i]);
             cout<<"Pushed: " << tokens[i].value<<" "<<tokens[i].classification<<endl;
