@@ -56,6 +56,9 @@ token pop(int index );
 void check(token& token, int& optop);
 bool isNonTerminal(token token);
 string generateTemp();
+void printQuads();
+void handleReduction(int& optop);
+void handleParentheses(int& optop);
 
 //Structure for Quads
 struct Quad{

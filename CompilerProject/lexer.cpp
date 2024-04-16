@@ -30,7 +30,7 @@ string getTokenClass(States state){
         case LEFTPARENTECES: return "LP";
         case RIGHTPARENTECES: return "RP";
         case SEMIDELI: return "semi";
-        case NOT: return "not";
+        case NOT: return "relop";
         case NOTEQUAL: return "relop";
         default: return "Uknown";
 
@@ -107,6 +107,8 @@ vector<token> tokenizer(const string& input) {
                 break;
             case ERROR:
                 cout<<getTokenClass(nextState)<<endl;
+                cout<<"ERROR Not part of the language"<<endl;
+                index++;
                 break;
             case MOP:
                 currentToken += c;
