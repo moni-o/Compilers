@@ -6,10 +6,9 @@ using namespace std;
 
 
 
-
 //Header file for Syntax 
 //table is a square matrix 
-enum predenceInput{
+enum precedenceInput{
     terminator,
     assignment,
     plus_input,
@@ -42,7 +41,35 @@ enum predenceInput{
 //2D array for Predence Operator Table Declaration,
 extern int PO_TABLE[predence_count][predence_count];
 void ini_PO_TABLE();
-void parseTokens(vector<token>& t);
-predenceInput maptToInput(token& token);
+void parsePgm(vector<token>& t, size_t c);
+void parseTokens(std::vector<token>& tokens);
+precedenceInput mapToInput(token& token);
+void parseBlock(vector<token>& tokens,size_t& current);
+void parseAssignment(vector<token>& tokens, size_t& current);
+void parseEx(vector<token>& tokens, size_t& current, int& optop);
+void parseConst(vector<token>& tokens, size_t& current);
+void parseVar(vector<token>& tokens, size_t& current);
+void parseStatement(vector<token>& tokens, size_t& current);
+//Functions for stack
+void push(token token);
+token pop(int index );
+void check(token& token, int& optop);
+bool isNonTerminal(token token);
+string generateTemp();
+
+//Structure for Quads
+struct Quad{
+    string op;
+    string arg1;
+    string arg2;
+    string result;
+
+};
+
+void  addQuad(string op, string arg1, string arg2, string result);
+
+
+
+
 
 #endif
