@@ -41,24 +41,25 @@ enum precedenceInput{
 //2D array for Predence Operator Table Declaration,
 extern int PO_TABLE[predence_count][predence_count];
 void ini_PO_TABLE();
-void parsePgm(vector<token>& t, size_t c);
-void parseTokens(std::vector<token>& tokens);
+void parseTokens(vector<token>& tokens);
+
+void parseBlock(token& tokens, int& current);
 precedenceInput mapToInput(token& token);
-void parseBlock(vector<token>& tokens,size_t& current);
-void parseAssignment(vector<token>& tokens, size_t& current);
-void parseEx(vector<token>& tokens, size_t& current, int& optop);
-void parseConst(vector<token>& tokens, size_t& current);
-void parseVar(vector<token>& tokens, size_t& current);
-void parseStatement(vector<token>& tokens, size_t& current);
+
 //Functions for stack
 void push(token token);
 token pop(int index );
 void check(token& token, int& optop);
-bool isNonTerminal(token token);
+bool isOperatorToken(precedenceInput type);
 string generateTemp();
 void printQuads();
 void handleReduction(int& optop);
-void handleParentheses(int& optop);
+void reduceParentheses(token& comingOP,  int& operatorTop);
+void ifStatement(token& tokens, int& topToken);
+//void relop(token& tokens, int& topToken);
+string relopToOp(string relop);
+void thenStatement(token& tokens,int& topToken);
+string generateLabel();
 
 //Structure for Quads
 struct Quad{
