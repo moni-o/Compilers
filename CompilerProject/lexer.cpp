@@ -174,9 +174,11 @@ vector<token> tokenizer(const string& input) {
                 currentState = START;
                 break;
             case FINALEQUAL:
+                currentToken +=c;
                 tokens.push_back({currentToken, getTokenClass(nextState)});
                 currentToken.clear();
                 currentState = START;
+                index++;
                 break; 
             case LESSTHAN_STATE:
                 currentToken +=c;

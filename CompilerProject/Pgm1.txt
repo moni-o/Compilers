@@ -3,12 +3,5 @@
 	CONST  M = 7,  N = 85;
 	VAR  X, Y, Z;
 	
-	
-		IF A+B> B THEN{
-			Y = D + E;
-			JOE = 16;
-		}
-		
+	A = C + B;
  }
-
-

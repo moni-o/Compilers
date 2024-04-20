@@ -11,6 +11,7 @@ int top = -1;
 int quadCount  = 0;
 int tempCount = 0;
 int lableCount =0;
+int whileCount = 0;
 token stack[maxSize];
 Quad myquad[100];
 string fixupStack[MAXFIXUP];
@@ -146,7 +147,7 @@ void handleReduction(int& optop) {
     string result;
     optop = top;  // Update the optop to the new top of the stack
 
-    if (ope == "=" || ope == ">") {
+    if (ope == "=" || ope == ">" || ope == "<" || ope == ">=" || ope == "<=" || ope == "!=" || ope == "==") {
         // Assignment does not need a new temp variable.
         addQuad(ope, arg1, arg2);
         tempCount =0;
@@ -306,6 +307,21 @@ void parseTokens(vector<token>& tokens) {
                 elseStatement(optop, tokens[i]);
                 continue;
             }
+            if(tokens[i].classification == "WHILE")
+            {
+                whileStatement(optop,tokens[i]);
+                continue;
+            }
+            if(tokens[i].classification == "DO")
+            {
+                doStatement(optop, tokens[i]);
+                continue;
+            }
+            if(tokens[i].classification == "CIN" || tokens[i].classification == "COUT"){
+                cout<<"CIN/COUT"<<endl;
+                addQuad(tokens[i].value, tokens[i+1].value);
+                continue;
+            }
             if(tokens[i].classification == "EOF"){
                 cout<<"Finished The end of list"<<endl;
                 parsing =false;
@@ -316,7 +332,9 @@ void parseTokens(vector<token>& tokens) {
                 
             }
             else{ //Automatically pushes NONTerminals to the Stack.
+                cout<<"HERE"<<endl;
                 push(tokens[i]);
+                cout<<"HERE"<<endl;
             }
         }
      } 
@@ -338,7 +356,7 @@ void parseBlock(token& tokens,int& topToken){
                 topToken = top;
             }
             break;
-        case 3:
+        case 3: handleReduction(topToken);
             break;
         default:if(stack[top].value == "THEN" && stack[top-1].value == "IF"){
                 token x = pop();
@@ -359,7 +377,10 @@ void parseBlock(token& tokens,int& topToken){
                     endTop--;
                     topToken = top;
                 }
-                
+                if(stack[top].value == "DO" && stack[top-1].value == "WHILE"){
+                    popWhileDo();
+                    topToken = top;
+                }
                 if(tokens.value == "}"){
                     parseBlock(tokens, topToken);
                 }
@@ -372,6 +393,11 @@ void parseBlock(token& tokens,int& topToken){
 string generateLabel(){
     return "L" + to_string(++lableCount);
 }
+string whileLable(){
+    return "W" + to_string(++whileCount);
+}
+
+
 void ifStatement(token& tokens, int& topToken){
     int operation = PO_TABLE[mapToInput(stack[topToken])][mapToInput(tokens)];
     switch(operation){
@@ -417,7 +443,7 @@ void elseStatement(int& stackOperator, token& tokenRead){
             cout<<"top token: "<<stack[stackOperator].value<<" yields to: "<<tokenRead.value<<endl;
             push(tokenRead);  //If statement is pushed to stack, quad is created, and the top of the stack is updated
             stackOperator = top;
-            addQuad(tokenRead.value, generateLabel(), "JMP");
+            addQuad(tokenRead.value, generateLabel());
             endStack[++endTop] = myquad[quadCount-1].arg1;
             cout<<"EndStack: "<<endStack[endTop]<<endl;
             addQuad(fixupStack[fixupTop]);
@@ -427,12 +453,50 @@ void elseStatement(int& stackOperator, token& tokenRead){
 
     }
 }
+void whileStatement(int& optop, token& tokens){
+cout<<"While"<<endl;
+int operation = PO_TABLE[mapToInput(stack[optop])][mapToInput(tokens)];
+    switch(operation){
+        case 1: //yields --> Push to stack
+        case 2://Equal --> Push to stack
+            push(tokens);  //When the Then Statemtn is pushed into the stack a quad should be created
+            optop = top; //Set this as the current top Operator on the stack;
+            addQuad(tokens.value, whileLable());
+            fixupStack[++fixupTop] = myquad[quadCount-1].arg1; //While lable to fixUpStack
+            cout<<"Fixup: "<<fixupStack[fixupTop]<<" "<<fixupTop<<endl;
+        break;
+        case 3:   
+        break;
+    }
+}
 
+void doStatement(int& stackOperator, token& tokenRead){
+    cout<<stack[stackOperator].value<<" and incoming "<<tokenRead.value<<endl;
+    int relation = PO_TABLE[mapToInput(stack[stackOperator])][mapToInput(tokenRead)];
+    switch(relation){
+        case 1: //<
+        case 2: // ==
+            cout<<"top token: "<<stack[stackOperator].value<<" yields to: "<<tokenRead.value<<endl;
+            push(tokenRead);  //If statement is pushed to stack, quad is created, and the top of the stack is updated
+            stackOperator = top;
+            addQuad(tokenRead.value, generateLabel(),relopToOp(myquad[quadCount-1].op));
+            endStack[++endTop] = myquad[quadCount-1].arg1;
+            cout<<"EndStack: "<<endStack[endTop]<<endl;
+            break;
+        case 3:
+            handleReduction(stackOperator);
+            if(stack[stackOperator].classification != "terminator"){
+                doStatement(stackOperator, tokenRead); //Recursively call, in order to see if more reductions can be made after the pop was done.       
+            }
+        break;
 
+    }
+}
 string relopToOp(string relop){
     if(relop == ">") return "JLE";
     if(relop == ">=") return "JLE";
     if(relop == "==") return "JNE";
+    if(relop == "<") return "JGE";
     return "Unknown";
 
 }
@@ -442,7 +506,19 @@ void printQuads(){
         cout<<myquad[i].op<<" "<<myquad[i].arg1<<" "<<myquad[i].arg2<<" "<<myquad[i].result<<endl;
     }
 }
+void popWhileDo(){
+    cout<<"Popping While Do"<<endl;
+    token x = pop();
+    token y = pop();
+    cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
+    string W1 = fixupStack[fixupTop];
+    fixupTop--;
+    string l2 = endStack[endTop];
+    endTop--;
+    addQuad(W1);
+    addQuad(l2);
 
+}
 void printFixUpStack(){
     cout<<"Fixup Stack"<<endl;
     for(int i = 0; i<fixupTop; i++){

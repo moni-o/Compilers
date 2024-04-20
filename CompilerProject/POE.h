@@ -62,7 +62,11 @@ void ifStatement(token& tokens, int& topToken);
 string relopToOp(string relop);
 void thenStatement(token& tokens,int& topToken);
 void elseStatement(int& topToken,token& tokens);
+void whileStatement(int& optop, token& tokens);
+void doStatement(int& optop, token& tokens);
 void printFixUpStack();
+string whileLable();
+void popWhileDo();
 //Structure for Quads
 struct Quad{
     string op;
