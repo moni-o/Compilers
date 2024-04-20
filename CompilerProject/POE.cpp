@@ -11,6 +11,7 @@ void ini_PO_TABLE(){
     
      //Terminator row
      PO_TABLE[terminator][assignment]= 1;
+     PO_TABLE[terminator][left_brace]= 1; ///////Might delete later
 
 
      //Assigment row
@@ -134,6 +135,7 @@ void ini_PO_TABLE(){
     PO_TABLE[then_input][if_input]= 1;
     PO_TABLE[then_input][left_brace]= 1;
     PO_TABLE[then_input][call_input]= 1;
+    PO_TABLE[then_input][op_else]= 1;
 
     //While row
     PO_TABLE[while_input][plus_input]= 1;
@@ -162,8 +164,8 @@ void ini_PO_TABLE(){
     PO_TABLE[odd_input][leftP]= 1;
     PO_TABLE[odd_input][asterick]= 1;
     PO_TABLE[odd_input][slash]= 1;
-    PO_TABLE[odd_input][then_input]= 1;
-    PO_TABLE[odd_input][do_input]= 1;
+    PO_TABLE[odd_input][then_input]= 3;
+    PO_TABLE[odd_input][do_input]= 3;
 
 
     
@@ -173,8 +175,8 @@ void ini_PO_TABLE(){
     PO_TABLE[equal_input][leftP]= 1;
     PO_TABLE[equal_input][asterick]= 1;
     PO_TABLE[equal_input][slash]= 1;
-    PO_TABLE[equal_input][then_input]= 1;
-    PO_TABLE[equal_input][do_input]= 1;
+    PO_TABLE[equal_input][then_input]= 3;
+    PO_TABLE[equal_input][do_input]= 3;
 
     // NotEqual row
     PO_TABLE[not_equal][plus_input]= 1;
@@ -182,8 +184,8 @@ void ini_PO_TABLE(){
     PO_TABLE[not_equal][leftP]= 1;
     PO_TABLE[not_equal][asterick]= 1;
     PO_TABLE[not_equal][slash]= 1;
-    PO_TABLE[not_equal][then_input]= 1;
-    PO_TABLE[not_equal][do_input]= 1;
+    PO_TABLE[not_equal][then_input]= 3;
+    PO_TABLE[not_equal][do_input]= 3;
 
     //Greater Than
     PO_TABLE[greather_than][plus_input]= 1;
@@ -191,8 +193,8 @@ void ini_PO_TABLE(){
     PO_TABLE[greather_than][leftP]= 1;
     PO_TABLE[greather_than][asterick]= 1;
     PO_TABLE[greather_than][slash]= 1;
-    PO_TABLE[greather_than][then_input]= 1;
-    PO_TABLE[greather_than][do_input]= 1;
+    PO_TABLE[greather_than][then_input]= 3;
+    PO_TABLE[greather_than][do_input]= 3;
 
     //Less Than
     PO_TABLE[less_than][plus_input]= 1;
@@ -200,8 +202,8 @@ void ini_PO_TABLE(){
     PO_TABLE[less_than][leftP]= 1;
     PO_TABLE[less_than][asterick]= 1;
     PO_TABLE[less_than][slash]= 1;
-    PO_TABLE[less_than][then_input]= 1;
-    PO_TABLE[less_than][do_input]= 1;
+    PO_TABLE[less_than][then_input]= 3;
+    PO_TABLE[less_than][do_input]= 3;
 
     //Greater than equal row
 
@@ -210,8 +212,8 @@ void ini_PO_TABLE(){
     PO_TABLE[greather_than_equal][leftP]= 1;
     PO_TABLE[greather_than_equal][asterick]= 1;
     PO_TABLE[greather_than_equal][slash]= 1;
-    PO_TABLE[greather_than_equal][then_input]= 1;
-    PO_TABLE[greather_than_equal][do_input]= 1;
+    PO_TABLE[greather_than_equal][then_input]= 3;
+    PO_TABLE[greather_than_equal][do_input]= 3;
 
     //Lessthan equal
     PO_TABLE[less_than_equal][plus_input]= 1;
@@ -219,16 +221,25 @@ void ini_PO_TABLE(){
     PO_TABLE[less_than_equal][leftP]= 1;
     PO_TABLE[less_than_equal][asterick]= 1;
     PO_TABLE[less_than_equal][slash]= 1;
-    PO_TABLE[less_than_equal][then_input]= 1;
-    PO_TABLE[less_than_equal][do_input]= 1;
+    PO_TABLE[less_than_equal][then_input]= 3;
+    PO_TABLE[less_than_equal][do_input]= 3;
 
     //left Brace
-    PO_TABLE[left_brace][equal_input] = 1;
+    PO_TABLE[left_brace][assignment] = 1;
     PO_TABLE[left_brace][if_input] = 1;
     PO_TABLE[left_brace][while_input] = 1;
     PO_TABLE[left_brace][left_brace] = 1;
     PO_TABLE[left_brace][right_brace] = 2;
     PO_TABLE[left_brace][call_input] = 1;
+
+    //ELSE row
+    PO_TABLE[op_else][assignment] = 1;
+    PO_TABLE[op_else][if_input] = 1;
+    PO_TABLE[op_else][left_brace] = 1;
+    PO_TABLE[op_else][call_input] = 1;
+
+
+
 
     //  for(int i= 0; i<predence_count;++i){
     //     for(int j= 0; j<predence_count; ++j){

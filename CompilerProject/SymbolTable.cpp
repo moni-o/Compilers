@@ -23,7 +23,7 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
         cout<<nextState<<endl;
 
         switch (nextState) {
-            case START:
+            case Start:
                 currentState = nextState;
                 break;
             case Class_State:

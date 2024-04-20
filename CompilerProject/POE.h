@@ -31,6 +31,7 @@ enum precedenceInput{
     left_brace,
     right_brace,
     call_input,
+    op_else,
     cin_input,
     cout_input, 
     predence_count,
@@ -52,6 +53,7 @@ token pop(int index );
 void check(token& token, int& optop);
 bool isOperatorToken(precedenceInput type);
 string generateTemp();
+string generateLabel();
 void printQuads();
 void handleReduction(int& optop);
 void reduceParentheses(token& comingOP,  int& operatorTop);
@@ -59,8 +61,8 @@ void ifStatement(token& tokens, int& topToken);
 //void relop(token& tokens, int& topToken);
 string relopToOp(string relop);
 void thenStatement(token& tokens,int& topToken);
-string generateLabel();
-
+void elseStatement(int& topToken,token& tokens);
+void printFixUpStack();
 //Structure for Quads
 struct Quad{
     string op;

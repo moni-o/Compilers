@@ -18,6 +18,7 @@ int main(){
     ifstream file(filePath);
     stringstream buffer;
     int x = 20;
+    
 
     if (!file.is_open()) {
         
@@ -36,6 +37,8 @@ int main(){
     for(const auto& token: tokens){
         cout<<token.value<<" type: "<< token.classification<<endl;
     };
+
+
 
     parseTokens(tokens);
     

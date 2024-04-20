@@ -1,6 +1,14 @@
-Class PRGM1{
-    CONST M = 7, n N = 85;
-    VAR X, Y, Z;
-    X = M + Y * Z;
-    X = M + Y * Z + 12;
-}
+ CLASS PGM1 {
+	
+	CONST  M = 7,  N = 85;
+	VAR  X, Y, Z;
+	
+	
+		IF A+B> B THEN{
+			Y = D + E;
+			JOE = 16;
+		}
+		
+ }
+
+

@@ -5,13 +5,18 @@ using namespace std;
 
 //Global Variables
 const int maxSize = 50;
+const int MAXFIXUP = 100;
+const int MAXEND = 50;
 int top = -1;
 int quadCount  = 0;
 int tempCount = 0;
 int lableCount =0;
-
 token stack[maxSize];
 Quad myquad[100];
+string fixupStack[MAXFIXUP];
+string endStack[MAXEND];
+int endTop = -1;
+int fixupTop = -1;
 
 /////////////////////Stack Functions Only///////////////////////
 void push(token token) {
@@ -101,6 +106,9 @@ precedenceInput mapToInput(token& token){
     if(token.value == ")") return rightP;  
     if(token.value == "IF") return if_input;
     if(token.value == "THEN") return then_input;
+    if(token.value == "ELSE") return op_else;
+    if(token.value == "DO") return do_input;
+    if(token.value == "WHILE") return while_input;
     if(token.value == "{")return left_brace;
     if (token.value == "}") return right_brace;
     if (token.value == ">") return greather_than;
@@ -122,7 +130,11 @@ void addQuad(string op ="?", string arg1="?", string arg2 = "?" , string result 
     cout<<"Quad: "<<op<<" "<<arg1<<" "<<arg2<<" "<<result<<endl;
     
 }
-//
+void addToFixUp(string label ="?"){
+    fixupStack[fixupTop] = label;
+    fixupTop++;
+    cout<<"Fixup: "<<fixupStack[fixupTop]<<endl;
+}
 string generateTemp() {
         return "Temp" + to_string(++tempCount);  // Increment and return a new temp variable name
     }
@@ -287,13 +299,20 @@ void parseTokens(vector<token>& tokens) {
                cout<<"End of Then"<<endl;
                 continue;
             }
-           
+
+            if(tokens[i].classification == "ELSE")
+            {
+                cout<<"Else"<<endl;
+                elseStatement(optop, tokens[i]);
+                continue;
+            }
             if(tokens[i].classification == "EOF"){
                 cout<<"Finished The end of list"<<endl;
                 parsing =false;
 
                 cout<<endl;
                 printQuads();
+                printFixUpStack();
                 
             }
             else{ //Automatically pushes NONTerminals to the Stack.
@@ -307,6 +326,7 @@ void parseTokens(vector<token>& tokens) {
 void parseBlock(token& tokens,int& topToken){
     int operation = PO_TABLE[mapToInput(stack[topToken])][mapToInput(tokens)];
     switch(operation){
+        case 1: //yield in precedence the topTokens vs the token coming in
         case 2: ///EqualPrecedence
             push(tokens);  //If statement is pushed to stack, quad is created, and the top of the stack is updated
             topToken = top;
@@ -324,16 +344,23 @@ void parseBlock(token& tokens,int& topToken){
                 token x = pop();
                 token y = pop();
                 cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
-                cout<<"current: "<<stack[top].value<<"Current classificaton"<<stack[top].classification<<endl;
-                for(int i = 0; i<quadCount; i++){
-                    if(myquad[i].op == "THEN"){
-                        addQuad(myquad[i].arg1);
-                    }
-                }
+                cout<<"current: "<<stack[top].value<<endl;
+                addQuad(fixupStack[fixupTop]);
+                fixupTop--;
                 topToken = top;
                 }
+                if(stack[top].value == "ELSE" && stack[top-1].value == "THEN"){
+                    token x = pop();
+                    token y = pop();
+                    token z = pop();
+                    cout<<"Popped: "<<x.value<<" "<<y.value<<z.value<<endl;
+                    cout<<"current: "<<stack[top].value<<endl;
+                    addQuad(endStack[endTop]);
+                    endTop--;
+                    topToken = top;
+                }
                 
-                if(stack[topToken].value == "{"){
+                if(tokens.value == "}"){
                     parseBlock(tokens, topToken);
                 }
              
@@ -369,7 +396,8 @@ void thenStatement(token& tokens,int& topToken){
             push(tokens);  //When the Then Statemtn is pushed into the stack a quad should be created
             topToken = top; //Set this as the current top Operator on the stack;
             addQuad(tokens.value, generateLabel(), relopToOp(myquad[quadCount-1].op));
-            
+            fixupStack[++fixupTop] = myquad[quadCount-1].arg1;
+            cout<<"Fixup: "<<fixupStack[fixupTop]<<" "<<fixupTop<<endl;
             break;
         case 3:
             handleReduction(topToken);
@@ -380,6 +408,27 @@ void thenStatement(token& tokens,int& topToken){
     }
 
 }
+void elseStatement(int& stackOperator, token& tokenRead){
+    cout<<stack[stackOperator].value<<" and incoming "<<tokenRead.value<<endl;
+    int relation = PO_TABLE[mapToInput(stack[stackOperator])][mapToInput(tokenRead)];
+    switch(relation){
+        case 1: //<
+        case 2: // ==
+            cout<<"top token: "<<stack[stackOperator].value<<" yields to: "<<tokenRead.value<<endl;
+            push(tokenRead);  //If statement is pushed to stack, quad is created, and the top of the stack is updated
+            stackOperator = top;
+            addQuad(tokenRead.value, generateLabel(), "JMP");
+            endStack[++endTop] = myquad[quadCount-1].arg1;
+            cout<<"EndStack: "<<endStack[endTop]<<endl;
+            addQuad(fixupStack[fixupTop]);
+            break;
+        case 3:
+        break;
+
+    }
+}
+
+
 string relopToOp(string relop){
     if(relop == ">") return "JLE";
     if(relop == ">=") return "JLE";
@@ -394,3 +443,9 @@ void printQuads(){
     }
 }
 
+void printFixUpStack(){
+    cout<<"Fixup Stack"<<endl;
+    for(int i = 0; i<fixupTop; i++){
+        cout<<fixupStack[fixupTop]<<endl;
+    }
+}
