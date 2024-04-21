@@ -2,8 +2,12 @@
 	
 	CONST  M = 7,  N = 85;
 	VAR  X, Y, Z;
+
+	CIN Y;
+	CIN Z;
+
 	
-	WHILE J < 10 DO{
-		J = J + 1;
-	}
+	X = M + Y * Z + 12;
+
+	COUT X;
  }

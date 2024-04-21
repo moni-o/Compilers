@@ -9,7 +9,10 @@ void asmCode(vector<SymbolTable_Entries>& Symbol, Quad* quads, int quadsCount){
     bssSection(Symbol);
     codeSection(quads, quadsCount);
 
-
+    ss<<"fini:\n";
+    ss<<"\tmov\teax,sys_exit\n";
+    ss<<"\txor\tebx,ebx\n";
+    ss<<"\tint\t80h\n";
 
     writeX86("Pgm1.asm");
 }
@@ -20,6 +23,7 @@ void linuxCongfig(){
     ss<<"sys_write\teque\t4\n";
     ss<<"stdin\t\teque\t0\n";
     ss<<"stdout\t\teque\t1\n";
+    ss<<"\n\n";
 }
 void dataSection(vector<SymbolTable_Entries>& Symbol){
     ss<<"section.data\n";
@@ -72,12 +76,16 @@ void bssSection(vector<SymbolTable_Entries>& Symbol){
         }
     }
 
+    ss<<"\n\n";
+
 }
 void codeSection(Quad* quad, int count){
-    
-    ss<<"\tglobal_start\n";
-    ss<<"section.text\n";
+  
+    ss<<"\tglobal_start\n\n";
+    ss<<"section.text\n\n";
     ss<<"_start:\t\tnop\n";
+    ss<<"Again:";
+
 
 
     for(int i = 0; i < count; i++){
@@ -116,6 +124,21 @@ void codeSection(Quad* quad, int count){
                 
                 break;
             default:
+                 if(quad[i].op == "CIN"){
+                    ss<<"\tcall PrintString\n";
+                    ss<<"\tcall GetAnInteger\n";
+                    ss<<"\tmov\tax,[ReadInt]\n";
+                    ss<<"\tmov\t["<<quad[i].arg1<<"]"<<",ax\n";
+                }
+                if(quad[i].op == "COUT"){
+                    ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
+                    ss<<"\tcall\tConvertIntegerToString\n";
+                    ss<<"\tmov\teax,4\n";
+                    ss<<"\tmov\tebx,1\n";
+                    ss<<"\tmov\tecx,Result\n";
+                    ss<<"\tmov\tedx,ResultEnd\n";
+                    ss<<"\tint\t80h\n";
+                }
                 if(quad[i].op == "THEN"){
                     ss<<"\t"<<quad[i].arg2<<"\t"<<quad[i].arg1<<"\n";
                     break;
@@ -142,20 +165,92 @@ void codeSection(Quad* quad, int count){
                     ss<<"\t"<<quad[i].arg2<<"\t"<<quad[i].arg1<<"\n";
                     break;
                 }
-                if(quad[i].op == "CIN"){
-                    //Confused?
-
-                }
-                if(quad[i].op == "COUT"){
-                    //confused?
-                }
-                
+               
                 break;
 
             
         }
         
     }
+
+    ss<<"\n\n";
+    //PrintString Procedure
+    ss<<"PrintString:\n";
+    ss<<"\tpush\tax\n";
+    ss<<"\tpush\tdx\n";  
+	ss<<"\tmov\teax,4\n";
+    ss<<"\tmov\tebx,1\n";
+    ss<<"\tmov\tecx,userMsg\n";	
+    ss<<"\tmov\tedx,lenUserMsg\n";
+    ss<<"\tint\t80h\n";
+	ss<<"\tpop\tdx\n";
+    ss<<"\tpop\tax\n";
+	ss<<"\tret\n";
+	ss<<"\n\n";
+
+    //GetAnInteger Procedure
+    ss<<"GetAnInteger:\n";
+    ss<<"\tmov\teax,3\n";
+    ss<<"\tmov\tebx,2\n";
+    ss<<"\tmov\tecx,num\n";
+    ss<<"\tmov\tedx,6\n";
+    ss<<"\tint\t0x80\n";
+    ss<<"\tmov\tedx,eax\n";
+
+    ss<<"<If>\n";
+    ss<<"\tmov\teax,4\n";
+    ss<<"\tmov\tebx,1\n";
+    ss<<"\tint 80h\n";
+
+    //ConvertStringToInteger
+    ss<<"ConvertStringToInteger:\n";
+    ss<<"\tmov\tax,0\n";
+    ss<<"\tmov[ReadInt],ax\n";
+    ss<<"\tmov\tecx,num\n";
+
+    ss<<"\tmov\tbx,0\n";
+    ss<<"\tmov\tbl,byte[ecx]\n";
+
+    //Next
+    ss<<"Next:\tsub\tbl,'0'\n";
+    ss<<"\tmov\tax,[ReadInt]\n";
+    ss<<"\tmov\tdx,10\n";
+    ss<<"\tmul\tdx\n";
+    ss<<"\tadd\tax,bx\n";
+    ss<<"\tmov\t[ReadInt],ax\n";
+
+    ss<<"\tmov\tbx,0\n";
+    ss<<"\tadd\tecx,1\n";
+    ss<<"\tmov\tbl,byte[ecx]\n";
+
+    ss<<"\tcmp\tbl,0XA\n";
+    ss<<"\tjne\tNext\n";
+    ss<<"\tret\n";
+
+    ss<<"\n\n";
+    //ConvertIntegerToString
+    ss<<"ConvertIntegerToString:\n";
+    ss<<"\tmov\tebx,ResultValue + 4\n";
+
+    ss<<"ConvertLoop:\n";
+    ss<<"\tsub\tdx,dx\n";
+    ss<<"\tmov\tcx,10\n";
+    ss<<"\tdiv\tcx\n";
+    ss<<"\tadd\tdl,'0'\n";
+    ss<<"\tdec\tebx\n";
+    ss<<"\tcmp\tebx,ResultValue\n";
+    ss<<"\tjge\tConvertLoop\n";
+    ss<<"\tret\n";
+
+
+
+
+
+
+
+
+
+    ss<<"\n\n";
 }
 
 void writeX86(const string& filename){
