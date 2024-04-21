@@ -1,5 +1,7 @@
 #include "codeGen.h"
 #include<iostream>
+#include<cctype>
+#include<algorithm>
 
 stringstream ss;
 
@@ -14,21 +16,90 @@ void asmCode(vector<SymbolTable_Entries>& Symbol, Quad* quads, int quadsCount){
     ss<<"\txor\tebx,ebx\n";
     ss<<"\tint\t80h\n";
 
+
+
+
+    //PrintString Procedure
+    ss<<"PrintString:\n";
+    ss<<"\tpush\tax\n";
+    ss<<"\tpush\tdx\n";  
+	ss<<"\tmov\teax,4\n";
+    ss<<"\tmov\tebx,1\n";
+    ss<<"\tmov\tecx,userMsg\n";	
+    ss<<"\tmov\tedx,lenUserMsg\n";
+    ss<<"\tint\t80h\n";
+	ss<<"\tpop\tdx\n";
+    ss<<"\tpop\tax\n";
+	ss<<"\tret\n";
+	ss<<"\n\n";
+
+    //GetAnInteger Procedure
+    ss<<"GetAnInteger:\n";
+    ss<<"\tmov\teax,3\n";
+    ss<<"\tmov\tebx,2\n";
+    ss<<"\tmov\tecx,num\n";
+    ss<<"\tmov\tedx,6\n";
+    ss<<"\tint\t0x80\n";
+    ss<<"\tmov\tedx,eax\n";
+    ss<<"\tmov\teax,4\n";
+    ss<<"\tmov\tebx,1\n";
+    ss<<"\tint 80h\n";
+
+    //ConvertStringToInteger
+    ss<<"ConvertStringToInteger:\n";
+    ss<<"\tmov\tax,0\n";
+    ss<<"\tmov[ReadInt],ax\n";
+    ss<<"\tmov\tecx,num\n";
+
+    ss<<"\tmov\tbx,0\n";
+    ss<<"\tmov\tbl,byte[ecx]\n";
+
+    //Next
+    ss<<"Next:\tsub\tbl,'0'\n";
+    ss<<"\tmov\tax,[ReadInt]\n";
+    ss<<"\tmov\tdx,10\n";
+    ss<<"\tmul\tdx\n";
+    ss<<"\tadd\tax,bx\n";
+    ss<<"\tmov\t[ReadInt],ax\n";
+
+    ss<<"\tmov\tbx,0\n";
+    ss<<"\tadd\tecx,1\n";
+    ss<<"\tmov\tbl,byte[ecx]\n";
+
+    ss<<"\tcmp\tbl,0XA\n";
+    ss<<"\tjne\tNext\n";
+    ss<<"\tret\n";
+
+    ss<<"\n\n";
+    //ConvertIntegerToString
+    ss<<"ConvertIntegerToString:\n";
+    ss<<"\tmov\tebx,ResultValue + 4\n";
+    //Convert Loop
+    ss<<"ConvertLoop:\n";
+    ss<<"\tsub\tdx,dx\n";
+    ss<<"\tmov\tcx,10\n";
+    ss<<"\tdiv\tcx\n";
+    ss<<"\tadd\tdl,'0'\n";
+    ss<<"\tmov [ebx], dl";
+    ss<<"\tdec\tebx\n";
+    ss<<"\tcmp\tebx,ResultValue\n";
+    ss<<"\tjge\tConvertLoop\n";
+    ss<<"\tret\n";
     writeX86("Pgm1.asm");
 }
 
 void linuxCongfig(){
-    ss<<"sys_exit\teque\t1\n";
-    ss<<"sys_read\teque\t3\n";
-    ss<<"sys_write\teque\t4\n";
-    ss<<"stdin\t\teque\t0\n";
-    ss<<"stdout\t\teque\t1\n";
+    ss<<"sys_exit\tequ\t1\n";
+    ss<<"sys_read\tequ\t3\n";
+    ss<<"sys_write\tequ\t4\n";
+    ss<<"stdin\t\tequ\t0\n";
+    ss<<"stdout\t\tequ\t1\n";
     ss<<"\n\n";
 }
 void dataSection(vector<SymbolTable_Entries>& Symbol){
-    ss<<"section.data\n";
-    ss<<"\tuserMsg\tdb\t\"Enter a integer:(lesst than 32,765):'\n";
-    ss<<"\tlenUserMsgequ\t$-userMsg\n";
+    ss<<"section\t.data\n";
+    ss<<"\tuserMsg\tdb\t\'Enter a integer:(lesst than 32,765):'\n";
+    ss<<"\tlenUserMsg\tequ\t$\t-\tuserMsg\n";
     ss<<"\tdisplayMsg\tdb\t'You entered: '\n";
     ss<<"\tlenDisplayMsg\tequ\t$-displayMsg\n";
     ss<<"\tnewline\tdb\t0xA\n";
@@ -38,7 +109,7 @@ void dataSection(vector<SymbolTable_Entries>& Symbol){
     ss<<"\tResult\tdb\t'Ans='\n";
     ss<<"\tResultValue\tdb\'aaaaa'\n";
     ss<<"\t\t\tdb\t0xA\n";
-    ss<<"\tResultEnd\tequ\t$-Result'\n";
+    ss<<"\tResultEnd\tequ\t$-Result\n";
     ss<<"\tnum\ttimes 6 db'ABCDEF'\n";
     ss<<"\tnumEnd\t\tequ\t$-num\n";
 
@@ -81,8 +152,8 @@ void bssSection(vector<SymbolTable_Entries>& Symbol){
 }
 void codeSection(Quad* quad, int count){
   
-    ss<<"\tglobal_start\n\n";
-    ss<<"section.text\n\n";
+    ss<<"\tglobal\t_start\n\n";
+    ss<<"section\t.text\n\n";
     ss<<"_start:\t\tnop\n";
     ss<<"Again:";
 
@@ -90,6 +161,20 @@ void codeSection(Quad* quad, int count){
 
     for(int i = 0; i < count; i++){
         string OP = quad[i].op;
+        string arg1 = quad[i].arg1;
+        string arg2 = quad[i].arg2;
+        string result = quad[i].result;
+
+         if (isNumericLiteral(arg1)) {
+            arg1 = "lit" + arg1;  // Prefix numeric literals
+        }
+        if (isNumericLiteral(arg2)) {
+            arg2 = "lit" + arg2;  // Prefix numeric literals
+        }
+
+
+
+
         switch(OP[0]){
             case('+'):
                 ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
@@ -103,7 +188,7 @@ void codeSection(Quad* quad, int count){
                 break;
             case('*'):
                 ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
-                ss<<"\tmul\t"<<"["<<quad[i].arg2<<"]"<<"\n";
+                ss<<"\tmul\tword\t"<<"["<<quad[i].arg2<<"]"<<"\n";
                 ss<<"\tmov\t"<<"["<<quad[i].result<<"]"<<",ax\n";
                 break;
             case('/'):
@@ -174,84 +259,19 @@ void codeSection(Quad* quad, int count){
     }
 
     ss<<"\n\n";
-    //PrintString Procedure
-    ss<<"PrintString:\n";
-    ss<<"\tpush\tax\n";
-    ss<<"\tpush\tdx\n";  
-	ss<<"\tmov\teax,4\n";
-    ss<<"\tmov\tebx,1\n";
-    ss<<"\tmov\tecx,userMsg\n";	
-    ss<<"\tmov\tedx,lenUserMsg\n";
-    ss<<"\tint\t80h\n";
-	ss<<"\tpop\tdx\n";
-    ss<<"\tpop\tax\n";
-	ss<<"\tret\n";
-	ss<<"\n\n";
-
-    //GetAnInteger Procedure
-    ss<<"GetAnInteger:\n";
-    ss<<"\tmov\teax,3\n";
-    ss<<"\tmov\tebx,2\n";
-    ss<<"\tmov\tecx,num\n";
-    ss<<"\tmov\tedx,6\n";
-    ss<<"\tint\t0x80\n";
-    ss<<"\tmov\tedx,eax\n";
-
-    ss<<"<If>\n";
-    ss<<"\tmov\teax,4\n";
-    ss<<"\tmov\tebx,1\n";
-    ss<<"\tint 80h\n";
-
-    //ConvertStringToInteger
-    ss<<"ConvertStringToInteger:\n";
-    ss<<"\tmov\tax,0\n";
-    ss<<"\tmov[ReadInt],ax\n";
-    ss<<"\tmov\tecx,num\n";
-
-    ss<<"\tmov\tbx,0\n";
-    ss<<"\tmov\tbl,byte[ecx]\n";
-
-    //Next
-    ss<<"Next:\tsub\tbl,'0'\n";
-    ss<<"\tmov\tax,[ReadInt]\n";
-    ss<<"\tmov\tdx,10\n";
-    ss<<"\tmul\tdx\n";
-    ss<<"\tadd\tax,bx\n";
-    ss<<"\tmov\t[ReadInt],ax\n";
-
-    ss<<"\tmov\tbx,0\n";
-    ss<<"\tadd\tecx,1\n";
-    ss<<"\tmov\tbl,byte[ecx]\n";
-
-    ss<<"\tcmp\tbl,0XA\n";
-    ss<<"\tjne\tNext\n";
-    ss<<"\tret\n";
-
-    ss<<"\n\n";
-    //ConvertIntegerToString
-    ss<<"ConvertIntegerToString:\n";
-    ss<<"\tmov\tebx,ResultValue + 4\n";
-
-    ss<<"ConvertLoop:\n";
-    ss<<"\tsub\tdx,dx\n";
-    ss<<"\tmov\tcx,10\n";
-    ss<<"\tdiv\tcx\n";
-    ss<<"\tadd\tdl,'0'\n";
-    ss<<"\tdec\tebx\n";
-    ss<<"\tcmp\tebx,ResultValue\n";
-    ss<<"\tjge\tConvertLoop\n";
-    ss<<"\tret\n";
+    
 
 
 
 
-
-
-
-
-
-    ss<<"\n\n";
+    
 }
+
+bool isNumericLiteral(const string& str) {
+    return !str.empty() && all_of(str.begin(), str.end(), ::isdigit);
+}
+
+
 
 void writeX86(const string& filename){
     ofstream file;

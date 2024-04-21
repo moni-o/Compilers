@@ -1,0 +1,14 @@
+string filePath = "Pgm1.txt"; // Path to the file to read
+    ifstream file(filePath);
+    stringstream buffer;
+    int x = 20;
+
+    // if (!file.is_open()) {
+        
+    //     return EXIT_FAILURE;
+    //  }
+    // buffer << file.rdbuf();
+    
+    //  string input = buffer.str();
+
+    //  file.close(); // Close the file

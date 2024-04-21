@@ -17,7 +17,7 @@ void linuxCongfig();
 void dataSection(vector<SymbolTable_Entries>& Symbol);
 void bssSection(vector<SymbolTable_Entries>& Symbol);
 void codeSection(Quad* q, int count);
-
+bool isNumericLiteral(const string& str);
 void writeX86(const string& filename);
    
 
