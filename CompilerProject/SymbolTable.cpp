@@ -17,10 +17,10 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
         string c = tokens[i].classification; 
         
         SymbolInput nextInput = mapSymbolInput(c);
-        cout<<tokens[i].value<<" "<<tokens[i].classification<<endl;
+        //cout<<tokens[i].value<<" "<<tokens[i].classification<<endl;
         SymbolStates nextState = static_cast<SymbolStates>(FSA2[currentState][nextInput]); // Determine the next state, assign to nextState
-        cout<<"FSA2["<<currentState<<"]"<<"["<<nextInput<<"]"<<endl; 
-        cout<<nextState<<endl;
+       // cout<<"FSA2["<<currentState<<"]"<<"["<<nextInput<<"]"<<endl; 
+        //cout<<nextState<<endl;
 
         switch (nextState) {
             case Start:
@@ -31,8 +31,8 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
                 break;
             case PGM_Final:
                 currentToken = tokens[i].value;
-                tableEntry.push_back({currentToken, "Pogram name", " " ,caddr, "CS"});
-                cout<<currentToken<<" Pogram name"<<endl;
+                tableEntry.push_back({currentToken, "Program name", " " ,caddr, "CS"});
+                //cout<<currentToken<<" Pogram name"<<endl;
                 currentState = nextState;
                 break;
             case PGM_Start:
@@ -51,7 +51,7 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
             case Const_VAR_De:
                 tableEntry.push_back({currentToken,"ConstVar", tokens[i].value, addr, "DS"});
                 addr +=2;
-                cout<<currentToken<<"ConstVar"<<tokens[i].value<<endl;
+                //cout<<currentToken<<"ConstVar"<<tokens[i].value<<endl;
                 currentState = nextState;
                 break;
             case VAR_State:
@@ -68,12 +68,12 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
                 break;
             case Int_Final:
                 currentToken = tokens[i].value;
-                cout<<"HERE"<<endl;
-                cout<<currentToken<<endl;
+                //cout<<"HERE"<<endl;
+                //cout<<currentToken<<endl;
                 tableEntry.push_back({currentToken, "Numeric Literal", currentToken, addr ,"DS"});
                 addr +=2;
                 currentState = nextState;
-                cout<<currentToken<< " Numeric Literal "<< " "<<endl;
+               // cout<<currentToken<< " Numeric Literal "<< " "<<endl;
                 break;
             case EOF_STATE:
                 currentState = nextState;

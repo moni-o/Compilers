@@ -27,6 +27,7 @@ void push(token token) {
     }
     cout<<"pushing: "<<token.value<<" "<<token.classification<<endl;;
     stack[++top] = token;
+
 }
 
 token pop(int index = -1) {
@@ -319,7 +320,10 @@ void parseTokens(vector<token>& tokens) {
             }
             if(tokens[i].classification == "CIN" || tokens[i].classification == "COUT"){
                 cout<<"CIN/COUT"<<endl;
-                addQuad(tokens[i].value, tokens[i+1].value);
+                token current = tokens[i];
+                if( tokens[++i].classification == "variable"){
+                    addQuad(current.value, tokens[i].value);
+                }
                 continue;
             }
             if(tokens[i].classification == "EOF"){
@@ -328,7 +332,7 @@ void parseTokens(vector<token>& tokens) {
 
                 cout<<endl;
                 printQuads();
-                printFixUpStack();
+                //printFixUpStack();
                 
             }
             else{ //Automatically pushes NONTerminals to the Stack.
@@ -524,4 +528,10 @@ void printFixUpStack(){
     for(int i = 0; i<fixupTop; i++){
         cout<<fixupStack[fixupTop]<<endl;
     }
+}
+Quad* getQuadArray() {
+    return myquad;
+}
+int getQuadCount() {
+    return quadCount;
 }

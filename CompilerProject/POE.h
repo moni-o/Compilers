@@ -77,6 +77,8 @@ struct Quad{
 };
 
 void  addQuad(string op, string arg1, string arg2, string result);
+Quad* getQuadArray();
+int getQuadCount();
 
 
 

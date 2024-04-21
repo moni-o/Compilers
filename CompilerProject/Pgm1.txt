@@ -3,5 +3,7 @@
 	CONST  M = 7,  N = 85;
 	VAR  X, Y, Z;
 	
-	A = C + B;
+	WHILE J < 10 DO{
+		J = J + 1;
+	}
  }
