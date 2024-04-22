@@ -9,17 +9,22 @@
 #include "codeGen.h"
 using namespace std;
 
-int main(){
-    //ofstream myfile("tokens");
+int main(int argc,char* argv[]){
 
-    initFSA();
-    initFSA2();
-   
-    string filePath = "Pgm1.txt"; // Path to the file to read
+
+    if(argc<2){
+        cout<<"Please provide a file to read"<<endl;
+        return 1;
+    }
+    
+    
+    string filePath = argv[1]; // Path to the file  to read
     ifstream file(filePath);
     stringstream buffer;
     int x = 20;
     
+   
+
 
     if (!file.is_open()) {
         
@@ -32,7 +37,10 @@ int main(){
      file.close(); // Close the file
 
 
-    ini_PO_TABLE();
+    initFSA();
+    initFSA2();
+
+  
 
    vector<token> tokens =tokenizer(input);
     for(const auto& token: tokens){
@@ -40,7 +48,7 @@ int main(){
     };
 
     vector<SymbolTable_Entries> symbol = SymbolTable(tokens);
-
+    ini_PO_TABLE();
     parseTokens(tokens);
 
     Quad* quads= getQuadArray();

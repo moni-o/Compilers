@@ -31,7 +31,7 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
                 break;
             case PGM_Final:
                 currentToken = tokens[i].value;
-                tableEntry.push_back({currentToken, "Program name", " " ,caddr, "CS"});
+                tableEntry.push_back({currentToken, "Program Name", " " ,caddr, "CS"});
                 //cout<<currentToken<<" Pogram name"<<endl;
                 currentState = nextState;
                 break;

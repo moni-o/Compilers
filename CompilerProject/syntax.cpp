@@ -501,6 +501,8 @@ string relopToOp(string relop){
     if(relop == ">=") return "JLE";
     if(relop == "==") return "JNE";
     if(relop == "<") return "JGE";
+    if(relop == "<=") return "JGE"; ///Need to check this again
+    if(relop == "!=") return "JE"; // Need to check this again
     return "Unknown";
 
 }

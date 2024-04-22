@@ -1,13 +1,7 @@
- CLASS PGM1 {
+ CLASS Pgm2 {
 	
 	CONST  M = 7,  N = 85;
 	VAR  X, Y, Z;
 
-	CIN Y;
-	CIN Z;
-
-	
 	X = M + Y * Z + 12;
-
-	COUT X;
  }

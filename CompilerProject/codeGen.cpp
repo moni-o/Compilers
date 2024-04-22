@@ -6,8 +6,11 @@
 stringstream ss;
 
 void asmCode(vector<SymbolTable_Entries>& Symbol, Quad* quads, int quadsCount){
+    string filename;
     linuxCongfig();
-    dataSection(Symbol);
+    filename = dataSection(Symbol);
+    cout<<filename<<endl;
+    filename = filename + ".asm";
     bssSection(Symbol);
     codeSection(quads, quadsCount);
 
@@ -85,7 +88,7 @@ void asmCode(vector<SymbolTable_Entries>& Symbol, Quad* quads, int quadsCount){
     ss<<"\tcmp\tebx,ResultValue\n";
     ss<<"\tjge\tConvertLoop\n";
     ss<<"\tret\n";
-    writeX86("Pgm1.asm");
+    fileX86(filename);
 }
 
 void linuxCongfig(){
@@ -96,7 +99,10 @@ void linuxCongfig(){
     ss<<"stdout\t\tequ\t1\n";
     ss<<"\n\n";
 }
-void dataSection(vector<SymbolTable_Entries>& Symbol){
+string dataSection(vector<SymbolTable_Entries>& Symbol){
+
+    string filename;
+
     ss<<"section\t.data\n";
     ss<<"\tuserMsg\tdb\t\'Enter a integer:(lesst than 32,765):'\n";
     ss<<"\tlenUserMsg\tequ\t$\t-\tuserMsg\n";
@@ -114,6 +120,9 @@ void dataSection(vector<SymbolTable_Entries>& Symbol){
     ss<<"\tnumEnd\t\tequ\t$-num\n";
 
     for(int i = 0; i<Symbol.size(); i++){
+     if(Symbol[i].classi == "Program Name"){
+        filename = Symbol[i].symbol;
+     }
     if(Symbol[i].classi == "ConstVar"){
         ss<<"\t"<<Symbol[i].symbol<<"\t\tDW\t"<<Symbol[i].val<<"\n";
     }
@@ -133,6 +142,7 @@ void dataSection(vector<SymbolTable_Entries>& Symbol){
         }
     }
     ss<<"\n\n";
+    return filename;
 }
 void bssSection(vector<SymbolTable_Entries>& Symbol){
     ss<<"section\t.bss\n";
@@ -160,7 +170,7 @@ void codeSection(Quad* quad, int count){
 
 
     for(int i = 0; i < count; i++){
-        string OP = quad[i].op;
+        string OP = quad[i].op; // I save the Operator value in the string OP
         string arg1 = quad[i].arg1;
         string arg2 = quad[i].arg2;
         string result = quad[i].result;
@@ -175,8 +185,8 @@ void codeSection(Quad* quad, int count){
 
 
 
-        switch(OP[0]){
-            case('+'):
+        switch(OP[0]){  // I use the first character of the OP string  to determine the operation, this allowed me to use switch statments
+            case('+'): 
                 ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
                 ss<<"\tadd\tax,"<<"["<<arg2<<"]"<<"\n";
                 ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
@@ -208,7 +218,7 @@ void codeSection(Quad* quad, int count){
                 ss<<OP<<":"<<"\tNOP\n";
                 
                 break;
-            default:
+            default: //If none of the above cases are met, then the default case , this contains if statemtns and checks the whole string.
                  if(quad[i].op == "CIN"){
                     ss<<"\tcall PrintString\n";
                     ss<<"\tcall GetAnInteger\n";
@@ -228,12 +238,12 @@ void codeSection(Quad* quad, int count){
                     ss<<"\t"<<arg2<<"\t"<<arg1<<"\n";
                     break;
                 }
-                if(quad[i].op == "=="){
+                if(quad[i].op == "=="){ //Needed to be in the default case because of the == operator
                    ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
                    ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
                     break;
                 }
-                if(quad[i].op == "="){
+                if(quad[i].op == "="){ //Needed to be in the default case because I needed to check to make sure the operator was an equal sign
                     ss<<"\tmov\tax,"<<"["<<arg2<<"]"<<"\n";
                     ss<<"\tmov\t"<<"["<<arg1<<"]"<<",ax\n";
                     break;
@@ -272,8 +282,7 @@ bool isNumericLiteral(const string& str) {
 }
 
 
-
-void writeX86(const string& filename){
+void fileX86(const string& filename){
     ofstream file;
     file.open(filename);
     if(!file){

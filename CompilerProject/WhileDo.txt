@@ -1,0 +1,8 @@
+CLASS WhileDo{
+    VAR J;
+
+
+    WHILE J < 10 DO {
+        J = J + 1;
+    }
+}

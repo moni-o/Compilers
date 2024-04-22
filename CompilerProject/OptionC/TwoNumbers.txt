@@ -1,0 +1,14 @@
+CLASS TwoNumbers{
+
+VAR A, B ;
+
+CIN A;
+CIN B;
+
+IF A > B THEN {
+    COUT A;
+}
+ELSE{
+    COUT B;
+    }
+}
