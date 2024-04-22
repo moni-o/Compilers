@@ -166,10 +166,10 @@ void codeSection(Quad* quad, int count){
         string result = quad[i].result;
 
          if (isNumericLiteral(arg1)) {
-            arg1 = "lit" + arg1;  // Prefix numeric literals
+            arg1 = "Lit" + arg1;  // Prefix numeric literals
         }
         if (isNumericLiteral(arg2)) {
-            arg2 = "lit" + arg2;  // Prefix numeric literals
+            arg2 = "Lit" + arg2;  // Prefix numeric literals
         }
 
 
@@ -177,35 +177,35 @@ void codeSection(Quad* quad, int count){
 
         switch(OP[0]){
             case('+'):
-                ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
-                ss<<"\tadd\tax,"<<"["<<quad[i].arg2<<"]"<<"\n";
-                ss<<"\tmov\t"<<"["<<quad[i].result<<"]"<<",ax\n";
+                ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
+                ss<<"\tadd\tax,"<<"["<<arg2<<"]"<<"\n";
+                ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
                 break;
             case('-'):
-                ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
-                ss<<"\tsub\tax,"<<"["<<quad[i].arg2<<"]"<<"\n";
-                ss<<"\tmov\t"<<"["<<quad[i].result<<"]"<<",ax\n";
+                ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
+                ss<<"\tsub\tax,"<<"["<<arg2<<"]"<<"\n";
+                ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
                 break;
             case('*'):
-                ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
-                ss<<"\tmul\tword\t"<<"["<<quad[i].arg2<<"]"<<"\n";
-                ss<<"\tmov\t"<<"["<<quad[i].result<<"]"<<",ax\n";
+                ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
+                ss<<"\tmul\tword\t"<<"["<<arg2<<"]"<<"\n";
+                ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
                 break;
             case('/'):
-                ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
-                ss<<"\tdiv\t"<<"["<<quad[i].arg2<<"]"<<"\n";
-                ss<<"\tmov\t"<<"["<<quad[i].result<<"]"<<",ax\n";
+                ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
+                ss<<"\tdiv\t"<<"["<<arg2<<"]"<<"\n";
+                ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
                 break;
             case('>'):
-                ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
-                ss<<"\tcmp\tax,"<<"["<<quad[i].arg2<<"]"<<"\n";
+                ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
+                ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
                 break;
             case('<'):
-                ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
-                ss<<"\tcmp\tax,"<<"["<<quad[i].arg2<<"]"<<"\n";
+                ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
+                ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
                 break;
             case('L'):
-                ss<<quad[i].op<<":"<<"\tNOP\n";
+                ss<<OP<<":"<<"\tNOP\n";
                 
                 break;
             default:
@@ -213,10 +213,10 @@ void codeSection(Quad* quad, int count){
                     ss<<"\tcall PrintString\n";
                     ss<<"\tcall GetAnInteger\n";
                     ss<<"\tmov\tax,[ReadInt]\n";
-                    ss<<"\tmov\t["<<quad[i].arg1<<"]"<<",ax\n";
+                    ss<<"\tmov\t["<<arg1<<"]"<<",ax\n";
                 }
                 if(quad[i].op == "COUT"){
-                    ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
+                    ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
                     ss<<"\tcall\tConvertIntegerToString\n";
                     ss<<"\tmov\teax,4\n";
                     ss<<"\tmov\tebx,1\n";
@@ -225,29 +225,29 @@ void codeSection(Quad* quad, int count){
                     ss<<"\tint\t80h\n";
                 }
                 if(quad[i].op == "THEN"){
-                    ss<<"\t"<<quad[i].arg2<<"\t"<<quad[i].arg1<<"\n";
+                    ss<<"\t"<<arg2<<"\t"<<arg1<<"\n";
                     break;
                 }
                 if(quad[i].op == "=="){
-                   ss<<"\tmov\tax,"<<"["<<quad[i].arg1<<"]"<<"\n";
-                   ss<<"\tcmp\tax,"<<"["<<quad[i].arg2<<"]"<<"\n";
+                   ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
+                   ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
                     break;
                 }
                 if(quad[i].op == "="){
-                    ss<<"\tmov\tax,"<<"["<<quad[i].arg2<<"]"<<"\n";
-                    ss<<"\tmov\t"<<"["<<quad[i].arg1<<"]"<<",ax\n";
+                    ss<<"\tmov\tax,"<<"["<<arg2<<"]"<<"\n";
+                    ss<<"\tmov\t"<<"["<<arg1<<"]"<<",ax\n";
                     break;
                 }
                 if(quad[i].op == "ELSE"){
-                    ss<<"\tJMP\t"<<quad[i].arg1<<"\n";
+                    ss<<"\tJMP\t"<<arg1<<"\n";
                     break;
                 }
                 if(quad[i].op == "WHILE"){
-                    ss<<quad[i].arg1<<":";
+                    ss<<arg1<<":";
                     break;
                 }
                 if(quad[i].op == "DO"){
-                    ss<<"\t"<<quad[i].arg2<<"\t"<<quad[i].arg1<<"\n";
+                    ss<<"\t"<<arg2<<"\t"<<arg1<<"\n";
                     break;
                 }
                

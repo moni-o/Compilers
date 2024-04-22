@@ -7,12 +7,12 @@ stdout		equ	1
 
 section	.data
 	userMsg	db	'Enter a integer:(lesst than 32,765):'
-	lenUserMsg	equ	$ - userMsg
+	lenUserMsg	equ	$	-	userMsg
 	displayMsg	db	'You entered: '
 	lenDisplayMsg	equ	$-displayMsg
 	newline	db	0xA
 	Ten	DW	10
-	printTempchar	db	'Tempchar =:'
+	printTempchar	db	'Tempchar = :'
 	lenPrintTempchar	equ	$-printTempchar
 	Result	db	'Ans='
 	ResultValue	db'aaaaa'
@@ -22,7 +22,7 @@ section	.data
 	numEnd		equ	$-num
 	M		DW	7
 	N		DW	85
-	lit12	DW	12
+	Lit12	DW	12
 
 
 section	.bss
@@ -30,7 +30,7 @@ section	.bss
 	testchar	RESB	1
 	ReadInt		RESW	1
 	tempint		RESW	1
-	;negflag		RESB	1
+	negflag		RESB	1
 	X		RESW	1
 	Y		RESW	1
 	Z		RESW	1
@@ -53,13 +53,13 @@ Again:	call PrintString
 	mov	ax,[ReadInt]
 	mov	[Z],ax
 	mov	ax,[Y]
-	mul	word [Z]
+	mul	word	[Z]
 	mov	[Temp1],ax
 	mov	ax,[M]
 	add	ax,[Temp1]
 	mov	[Temp2],ax
 	mov	ax,[Temp2]
-	add	ax,[lit12]
+	add	ax,[Lit12]
 	mov	[Temp3],ax
 	mov	ax,[Temp3]
 	mov	[X],ax
@@ -71,12 +71,11 @@ Again:	call PrintString
 	mov	edx,ResultEnd
 	int	80h
 
+
 fini:
 	mov	eax,sys_exit
 	xor	ebx,ebx
 	int	80h
-
-
 PrintString:
 	push	ax
 	push	dx
@@ -127,9 +126,7 @@ ConvertLoop:
 	mov	cx,10
 	div	cx
 	add	dl,'0'
-	mov [ebx], dl
-	dec	ebx
+	mov [ebx], dl	dec	ebx
 	cmp	ebx,ResultValue
 	jge	ConvertLoop
 	ret
-

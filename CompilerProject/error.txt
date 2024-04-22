@@ -1,6 +1,0 @@
-media/sf_CompilerProject$ nasm -f elf64 Pgm1.asm -o Pgm1.o
-Pgm1.asm:8: warning: label alone on a line without a colon might be in error [-w+label-orphan]
-Pgm1.asm:10: error: parser: instruction expected
-Pgm1.asm:42: warning: label alone on a line without a colon might be in error [-w+label-orphan]
-Pgm1.asm:44: warning: label alone on a line without a colon might be in error [-w+label-orphan]
-Pgm1.asm:95: error: label or instruction expected at start of line
