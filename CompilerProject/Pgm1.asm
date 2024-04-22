@@ -126,7 +126,8 @@ ConvertLoop:
 	mov	cx,10
 	div	cx
 	add	dl,'0'
-	mov [ebx], dl	dec	ebx
+	mov [ebx], dl
+	dec	ebx
 	cmp	ebx,ResultValue
 	jge	ConvertLoop
 	ret

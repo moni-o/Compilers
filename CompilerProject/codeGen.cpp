@@ -80,7 +80,7 @@ void asmCode(vector<SymbolTable_Entries>& Symbol, Quad* quads, int quadsCount){
     ss<<"\tmov\tcx,10\n";
     ss<<"\tdiv\tcx\n";
     ss<<"\tadd\tdl,'0'\n";
-    ss<<"\tmov [ebx], dl";
+    ss<<"\tmov [ebx], dl\n";
     ss<<"\tdec\tebx\n";
     ss<<"\tcmp\tebx,ResultValue\n";
     ss<<"\tjge\tConvertLoop\n";

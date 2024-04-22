@@ -1,0 +1,139 @@
+     1                                  sys_exit	equ	1
+     2                                  sys_read	equ	3
+     3                                  sys_write	equ	4
+     4                                  stdin		equ	0
+     5                                  stdout		equ	1
+     6                                  
+     7                                  
+     8                                  section	.data
+     9 00000000 456E74657220612069-     	userMsg	db	'Enter a integer:(lesst than 32,765):'
+     9 00000009 6E74656765723A286C-
+     9 00000012 65737374207468616E-
+     9 0000001B 2033322C373635293A 
+    10                                  	lenUserMsg	equ	$	-	userMsg
+    11 00000024 596F7520656E746572-     	displayMsg	db	'You entered: '
+    11 0000002D 65643A20           
+    12                                  	lenDisplayMsg	equ	$-displayMsg
+    13 00000031 0A                      	newline	db	0xA
+    14 00000032 0A00                    	Ten	DW	10
+    15 00000034 54656D706368617220-     	printTempchar	db	'Tempchar = :'
+    15 0000003D 3D203A             
+    16                                  	lenPrintTempchar	equ	$-printTempchar
+    17 00000040 416E733D                	Result	db	'Ans='
+    18 00000044 6161616161              	ResultValue	db'aaaaa'
+    19 00000049 0A                      			db	0xA
+    20                                  	ResultEnd	equ	$-Result
+    21 0000004A 414243444546-           	num	times 6 db'ABCDEF'
+    21 0000004A <rep 6h>           
+    22                                  	numEnd		equ	$-num
+    23 0000006E 0700                    	M		DW	7
+    24 00000070 5500                    	N		DW	85
+    25 00000072 0C00                    	Lit12	DW	12
+    26                                  
+    27                                  
+    28                                  section	.bss
+    29 00000000 ??                      	TempChar	RESB	1
+    30 00000001 ??                      	testchar	RESB	1
+    31 00000002 ????                    	ReadInt		RESW	1
+    32 00000004 ????                    	tempint		RESW	1
+    33 00000006 ??                      	negflag		RESB	1
+    34 00000007 ????                    	X		RESW	1
+    35 00000009 ????                    	Y		RESW	1
+    36 0000000B ????                    	Z		RESW	1
+    37 0000000D ????                    	Temp1		RESW	1
+    38 0000000F ????                    	Temp2		RESW	1
+    39 00000011 ????                    	Temp3		RESW	1
+    40                                  
+    41                                  
+    42                                  	global	_start
+    43                                  
+    44                                  section	.text
+    45                                  
+    46 00000000 90                      _start:		nop
+    47 00000001 E8B3000000              Again:	call PrintString
+    48 00000006 E8CD000000              	call GetAnInteger
+    49 0000000B 668B0425[02000000]      	mov	ax,[ReadInt]
+    50 00000013 66890425[09000000]      	mov	[Y],ax
+    51 0000001B E899000000              	call PrintString
+    52 00000020 E8B3000000              	call GetAnInteger
+    53 00000025 668B0425[02000000]      	mov	ax,[ReadInt]
+    54 0000002D 66890425[0B000000]      	mov	[Z],ax
+    55 00000035 668B0425[09000000]      	mov	ax,[Y]
+    56 0000003D 66F72425[0B000000]      	mul	word	[Z]
+    57 00000045 66890425[0D000000]      	mov	[Temp1],ax
+    58 0000004D 668B0425[6E000000]      	mov	ax,[M]
+    59 00000055 66030425[0D000000]      	add	ax,[Temp1]
+    60 0000005D 66890425[0F000000]      	mov	[Temp2],ax
+    61 00000065 668B0425[0F000000]      	mov	ax,[Temp2]
+    62 0000006D 66030425[72000000]      	add	ax,[Lit12]
+    63 00000075 66890425[11000000]      	mov	[Temp3],ax
+    64 0000007D 668B0425[11000000]      	mov	ax,[Temp3]
+    65 00000085 66890425[07000000]      	mov	[X],ax
+    66 0000008D 668B0425[07000000]      	mov	ax,[X]
+    67 00000095 E8A7000000              	call	ConvertIntegerToString
+    68 0000009A B804000000              	mov	eax,4
+    69 0000009F BB01000000              	mov	ebx,1
+    70 000000A4 B9[40000000]            	mov	ecx,Result
+    71 000000A9 BA0A000000              	mov	edx,ResultEnd
+    72 000000AE CD80                    	int	80h
+    73                                  
+    74                                  
+    75                                  fini:
+    76 000000B0 B801000000              	mov	eax,sys_exit
+    77 000000B5 31DB                    	xor	ebx,ebx
+    78 000000B7 CD80                    	int	80h
+    79                                  PrintString:
+    80 000000B9 6650                    	push	ax
+    81 000000BB 6652                    	push	dx
+    82 000000BD B804000000              	mov	eax,4
+    83 000000C2 BB01000000              	mov	ebx,1
+    84 000000C7 B9[00000000]            	mov	ecx,userMsg
+    85 000000CC BA24000000              	mov	edx,lenUserMsg
+    86 000000D1 CD80                    	int	80h
+    87 000000D3 665A                    	pop	dx
+    88 000000D5 6658                    	pop	ax
+    89 000000D7 C3                      	ret
+    90                                  
+    91                                  
+    92                                  GetAnInteger:
+    93 000000D8 B803000000              	mov	eax,3
+    94 000000DD BB02000000              	mov	ebx,2
+    95 000000E2 B9[4A000000]            	mov	ecx,num
+    96 000000E7 BA06000000              	mov	edx,6
+    97 000000EC CD80                    	int	0x80
+    98 000000EE 89C2                    	mov	edx,eax
+    99 000000F0 B804000000              	mov	eax,4
+   100 000000F5 BB01000000              	mov	ebx,1
+   101 000000FA CD80                    	int 80h
+   102                                  ConvertStringToInteger:
+   103 000000FC 66B80000                	mov	ax,0
+   104 00000100 66890425[02000000]      	mov[ReadInt],ax
+   105 00000108 B9[4A000000]            	mov	ecx,num
+   106 0000010D 66BB0000                	mov	bx,0
+   107 00000111 678A19                  	mov	bl,byte[ecx]
+   108 00000114 80EB30                  Next:	sub	bl,'0'
+   109 00000117 668B0425[02000000]      	mov	ax,[ReadInt]
+   110 0000011F 66BA0A00                	mov	dx,10
+   111 00000123 66F7E2                  	mul	dx
+   112 00000126 6601D8                  	add	ax,bx
+   113 00000129 66890425[02000000]      	mov	[ReadInt],ax
+   114 00000131 66BB0000                	mov	bx,0
+   115 00000135 83C101                  	add	ecx,1
+   116 00000138 678A19                  	mov	bl,byte[ecx]
+   117 0000013B 80FB0A                  	cmp	bl,0XA
+   118 0000013E 75D4                    	jne	Next
+   119 00000140 C3                      	ret
+   120                                  
+   121                                  
+   122                                  ConvertIntegerToString:
+   123 00000141 BB[48000000]            	mov	ebx,ResultValue + 4
+   124                                  ConvertLoop:
+   125 00000146 6629D2                  	sub	dx,dx
+   126 00000149 66B90A00                	mov	cx,10
+   127 0000014D 66F7F1                  	div	cx
+   128 00000150 80C230                  	add	dl,'0'
+   129 00000153 678813                  	mov [ebx], dl
+   130 00000156 FFCB                    	dec	ebx
+   131 00000158 81FB[44000000]          	cmp	ebx,ResultValue
+   132 0000015E 7DE6                    	jge	ConvertLoop
+   133 00000160 C3                      	ret
