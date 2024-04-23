@@ -104,7 +104,7 @@ string dataSection(vector<SymbolTable_Entries>& Symbol){
     string filename;
 
     ss<<"section\t.data\n";
-    ss<<"\tuserMsg\tdb\t\'Enter a integer:(lesst than 32,765):'\n";
+    ss<<"\tuserMsg\tdb\t\'Enter a integer:(less than 32,765):'\n";
     ss<<"\tlenUserMsg\tequ\t$\t-\tuserMsg\n";
     ss<<"\tdisplayMsg\tdb\t'You entered: '\n";
     ss<<"\tlenDisplayMsg\tequ\t$-displayMsg\n";
@@ -203,7 +203,7 @@ void codeSection(Quad* quad, int count){
                 break;
             case('/'):
                 ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
-                ss<<"\tdiv\t"<<"["<<arg2<<"]"<<"\n";
+                ss<<"\tdiv\tword\t"<<"["<<arg2<<"]"<<"\n";
                 ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
                 break;
             case('>'):

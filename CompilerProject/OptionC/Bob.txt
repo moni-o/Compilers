@@ -1,7 +1,7 @@
 CLASS Bob{
 
 CONST C = 3; 
-VAR A, B, Bob, Jane;
+VAR A, B, Bob, Jane, ANS;
 
 CIN A;
 CIN B;

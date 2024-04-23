@@ -6,7 +6,7 @@ stdout		equ	1
 
 
 section	.data
-	userMsg	db	'Enter a integer:(lesst than 32,765):'
+	userMsg	db	'Enter a integer:(less than 32,765):'
 	lenUserMsg	equ	$	-	userMsg
 	displayMsg	db	'You entered: '
 	lenDisplayMsg	equ	$-displayMsg
@@ -36,6 +36,7 @@ section	.bss
 	B		RESW	1
 	Bob		RESW	1
 	Jane		RESW	1
+	ANS		RESW	1
 	Temp1		RESW	1
 	Temp2		RESW	1
 	Temp3		RESW	1
@@ -73,7 +74,7 @@ Again:	call PrintString
 	sub	ax,[Lit10]
 	mov	[Temp2],ax
 	mov	ax,[Temp2]
-	div	[Lit2]
+	div	word	[Lit2]
 	mov	[Temp3],ax
 	mov	ax,[Temp3]
 	mul	word	[Lit4]
@@ -85,7 +86,7 @@ Again:	call PrintString
 	add	ax,[C]
 	mov	[Temp6],ax
 	mov	ax,[Temp5]
-	div	[Temp6]
+	div	word	[Temp6]
 	mov	[Temp7],ax
 	mov	ax,[Temp7]
 	mov	[ANS],ax

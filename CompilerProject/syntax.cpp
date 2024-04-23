@@ -382,7 +382,18 @@ void parseBlock(token& tokens,int& topToken){
                     topToken = top;
                 }
                 if(stack[top].value == "DO" && stack[top-1].value == "WHILE"){
-                    popWhileDo();
+                    cout <<"stack[top]"<<stack[top].value<<endl;
+                    //popWhileDo();
+                     cout<<"Popping While Do"<<endl;
+                    token x = pop();
+                    token y = pop();
+                    cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
+                    string W1 = fixupStack[fixupTop];
+                    fixupTop--;
+                    string l2 = endStack[endTop];
+                    endTop--;
+                    addQuad(W1);
+                    addQuad(l2);
                     topToken = top;
                 }
                 if(tokens.value == "}"){

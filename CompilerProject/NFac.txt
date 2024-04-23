@@ -10,4 +10,5 @@ CLASS NFactorial {
       N = N - 1;
     }
     COUT ANSWER;
+    
 }
