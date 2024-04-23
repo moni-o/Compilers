@@ -20,6 +20,10 @@ section	.data
 	ResultEnd	equ	$-Result
 	num	times 6 db'ABCDEF'
 	numEnd		equ	$-num
+	C		DW	3
+	Lit10	DW	10
+	Lit2	DW	2
+	Lit4	DW	4
 
 
 section	.bss
@@ -28,6 +32,11 @@ section	.bss
 	ReadInt		RESW	1
 	tempint		RESW	1
 	negflag		RESB	1
+	A		RESW	1
+	B		RESW	1
+	Bob		RESW	1
+	Jane		RESW	1
+	ANS		RESW	1
 	Temp1		RESW	1
 	Temp2		RESW	1
 	Temp3		RESW	1
@@ -42,20 +51,56 @@ section	.bss
 section	.text
 
 _start:		nop
-Again:	mov	ax,[A]
-	cmp	ax,[B]
-	JLE	L1
-	mov	ax,[C]
-	cmp	ax,[D]
-	JNE	L2
-	mov	ax,[X]
-	mov	[Y],ax
-L2:	NOP
-	mov	ax,[X]
-	mov	[Y],ax
-	mov	ax,[N]
-	mov	[M],ax
-L1:	NOP
+Again:	call PrintString
+	call GetAnInteger
+	mov	ax,[ReadInt]
+	mov	[A],ax
+	call PrintString
+	call GetAnInteger
+	mov	ax,[ReadInt]
+	mov	[B],ax
+	call PrintString
+	call GetAnInteger
+	mov	ax,[ReadInt]
+	mov	[Bob],ax
+	call PrintString
+	call GetAnInteger
+	mov	ax,[ReadInt]
+	mov	[Jane],ax
+	mov	ax,[Bob]
+	add	ax,[Jane]
+	mov	[Temp1],ax
+	mov	ax,[Temp1]
+	sub	ax,[Lit10]
+	mov	[Temp2],ax
+	mov	ax,[Temp2]
+	div	word	[Lit2]
+	mov	[Temp3],ax
+	mov	dx,0
+	mov	ax,[Temp3]
+	mov	cx[Lit4]
+	mul	cx
+	mov	[Temp4],ax
+	mov	dx,0
+	mov	ax,[A]
+	mov	cx[Temp4]
+	mul	cx
+	mov	[Temp5],ax
+	mov	ax,[B]
+	add	ax,[C]
+	mov	[Temp6],ax
+	mov	ax,[Temp5]
+	div	word	[Temp6]
+	mov	[Temp7],ax
+	mov	ax,[Temp7]
+	mov	[ANS],ax
+	mov	ax,[ANS]
+	call	ConvertIntegerToString
+	mov	eax,4
+	mov	ebx,1
+	mov	ecx,Result
+	mov	edx,ResultEnd
+	int	80h
 
 
 fini:

@@ -1,0 +1,8 @@
+CLASS DIV{
+    VAR A, C , ANSWER;
+    CIN A, C;
+    ANSWER = A / C ;
+    COUT ANSWER;
+
+
+}
