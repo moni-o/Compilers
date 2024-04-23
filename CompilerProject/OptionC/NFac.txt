@@ -1,0 +1,13 @@
+CLASS NFactorial {
+    VAR  N, ANSWER;
+
+    CIN N;
+    ANSWER = 1;
+
+    
+    WHILE N > 1 DO {
+      ANSWER = ANSWER * N ;
+      N = N - 1;
+    }
+    COUT ANSWER;
+}

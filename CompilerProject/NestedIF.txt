@@ -1,0 +1,12 @@
+CLASS NextedIF {
+    VAR A, B, C;
+    CIN A;
+    CIN B;
+    CIN C;
+
+IF A > B THEN {
+    IF C  == D THEN{
+       Y =A;
+    }
+}
+}

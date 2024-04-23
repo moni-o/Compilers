@@ -216,7 +216,6 @@ void codeSection(Quad* quad, int count){
                 break;
             case('L'):
                 ss<<OP<<":"<<"\tNOP\n";
-                
                 break;
             default: //If none of the above cases are met, then the default case , this contains if statemtns and checks the whole string.
                  if(quad[i].op == "CIN"){
@@ -255,6 +254,10 @@ void codeSection(Quad* quad, int count){
                 if(quad[i].op == "WHILE"){
                     ss<<arg1<<":";
                     break;
+                }
+                if(quad[i].op.substr(0,1) == "W" && OP != "WHILE"){
+                    ss<<"\tJMP\t"<<OP<<"\n";
+                     break;
                 }
                 if(quad[i].op == "DO"){
                     ss<<"\t"<<arg2<<"\t"<<arg1<<"\n";

@@ -77,17 +77,15 @@ vector<SymbolTable_Entries>SymbolTable(vector<token>& tokens){
                 break;
             case EOF_STATE:
                 currentState = nextState;
-                tableEntry.push_back({"Temp1", "Var (int)", "?", addr, "DS"});
-                addr +=2;
-                tableEntry.push_back({"Temp2", "Var (int)", "?",addr, "DS"});
-                addr+=2;
-                tableEntry.push_back({"Temp3", "Var (int)", "?", addr, "DS"});
                 break;
             default:
                 break;                              
          }
 
     }
-   
+   for(int i = 1; i<=7; i++){
+        tableEntry.push_back({"Temp" + to_string(i) , "Var (int)", "?", addr, "DS"});
+        addr +=2;
+        }
     return tableEntry;
 }
