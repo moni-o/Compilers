@@ -64,6 +64,8 @@ W1:	mov	ax,[N]
 	mov	[Temp1],ax
 	mov	ax,[Temp1]
 	mov	[N],ax
+	JMP	W1
+L1:	NOP
 	mov	ax,[ANSWER]
 	call	ConvertIntegerToString
 	mov	eax,4
@@ -71,8 +73,6 @@ W1:	mov	ax,[N]
 	mov	ecx,Result
 	mov	edx,ResultEnd
 	int	80h
-	JMP	W1
-L1:	NOP
 
 
 fini:

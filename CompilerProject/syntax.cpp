@@ -336,7 +336,7 @@ void parseTokens(vector<token>& tokens) {
                 
             }
             else{ //Automatically pushes NONTerminals to the Stack.
-                cout<<"HERE"<<endl;
+                cout<<"Nonterminal added : ";
                 push(tokens[i]);
                 cout<<"HERE"<<endl;
             }
@@ -352,57 +352,57 @@ void parseBlock(token& tokens,int& topToken){
         case 2: ///EqualPrecedence
             push(tokens);  //If statement is pushed to stack, quad is created, and the top of the stack is updated
             topToken = top;
-            if(stack[top-1].value == "{" && stack[top].value == "}"){
-                token x = pop();
-                token y = pop();
-                cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
-                cout<<"current: "<<stack[top].value<<endl;
-                topToken = top;
-            }
             break;
         case 3: handleReduction(topToken);
-            break;
-        default:if(stack[top].value == "THEN" && stack[top-1].value == "IF"){
-                token x = pop();
-                token y = pop();
-                cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
-                cout<<"current: "<<stack[top].value<<endl;
-                addQuad(fixupStack[fixupTop]);
-                fixupTop--;
-                topToken = top;
+             if(tokens.value == "}"){
+                parseBlock(tokens, topToken);
                 }
-                if(stack[top].value == "ELSE" && stack[top-1].value == "THEN"){
-                    token x = pop();
-                    token y = pop();
-                    token z = pop();
-                    cout<<"Popped: "<<x.value<<" "<<y.value<<z.value<<endl;
-                    cout<<"current: "<<stack[top].value<<endl;
-                    addQuad(endStack[endTop]);
-                    endTop--;
-                    topToken = top;
-                }
-                if(stack[top].value == "DO" && stack[top-1].value == "WHILE"){
-                    cout <<"stack[top]"<<stack[top].value<<endl;
-                    //popWhileDo();
-                     cout<<"Popping While Do"<<endl;
-                    token x = pop();
-                    token y = pop();
-                    cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
-                    string W1 = fixupStack[fixupTop];
-                    fixupTop--;
-                    string l2 = endStack[endTop];
-                    endTop--;
-                    addQuad(W1);
-                    addQuad(l2);
-                    topToken = top;
-                }
-                if(tokens.value == "}"){
-                    parseBlock(tokens, topToken);
-                }
-             
-            break;
 
+
+            break;
     }
+        if (stack[top-1].value == "{" && stack[top].value == "}") {
+            token x = pop();
+            token y = pop();
+            cout << "Popped: " << x.value << " " << y.value << endl;
+            cout << "Current: " << stack[top].value << endl;
+            topToken = top;}
+        if(stack[top].value == "THEN" && stack[top-1].value == "IF"){
+            token x = pop();
+            token y = pop();
+            cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
+            cout<<"current: "<<stack[top].value<<endl;
+            addQuad(fixupStack[fixupTop]);
+            fixupTop--;
+            topToken = top;
+            }
+        if(stack[top].value == "ELSE" && stack[top-1].value == "THEN"){
+            token x = pop();
+            token y = pop();
+            token z = pop();
+            cout<<"Popped: "<<x.value<<" "<<y.value<<z.value<<endl;
+            cout<<"current: "<<stack[top].value<<endl;
+            addQuad(endStack[endTop]);
+            endTop--;
+            topToken = top;
+            }
+        if(stack[top].value == "DO" && stack[top-1].value == "WHILE"){
+            cout <<"stack[top]"<<stack[top].value<<endl;
+                    //popWhileDo();
+            cout<<"Popping While Do"<<endl;
+            token x = pop();
+            token y = pop();
+            cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
+            string W1 = fixupStack[fixupTop];
+            fixupTop--;
+            string l2 = endStack[endTop];
+            endTop--;
+            addQuad(W1);
+            addQuad(l2);
+            topToken = top;
+                }
+            
+             //break;
 }  
 
 string generateLabel(){
@@ -469,7 +469,7 @@ void elseStatement(int& stackOperator, token& tokenRead){
     }
 }
 void whileStatement(int& optop, token& tokens){
-cout<<"While"<<endl;
+cout<<stack[optop].value<<" and incoming "<<tokens.value<<endl;
 int operation = PO_TABLE[mapToInput(stack[optop])][mapToInput(tokens)];
     switch(operation){
         case 1: //yields --> Push to stack
