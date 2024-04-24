@@ -1,0 +1,17 @@
+CLASS Hours{
+   
+   VAR WEEKS, HOURS , WEEKCOUNT, DAY;
+   CIN WEEKS;
+   WEEKCOUNT = 1;
+   HOURS = 0;
+
+   WHILE WEEKCOUNT <= WEEKS DO {
+        DAY = 1;
+        WHILE DAY <= 7 DO {
+            HOURS = HOURS + 24;
+            DAY =  DAY + 1;
+        }
+        WEEKCOUNT = WEEKCOUNT + 1;
+   }
+    COUT HOURS;
+}

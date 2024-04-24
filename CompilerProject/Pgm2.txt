@@ -1,0 +1,8 @@
+CLASS Pgm2{
+    WHILE J < 10 DO {
+        J = J + 1;
+        WHILE C < A DO{
+            A = D + 1;
+        }
+    }
+}

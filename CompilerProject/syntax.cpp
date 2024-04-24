@@ -56,13 +56,6 @@ token pop(int index = -1) {
     }
 }
 
-token topOfStack() {
-    if (top < 0) {
-        throw out_of_range("Stack is empty"); 
-    }
-
-    return stack[top];
-}
 
 ////////////////////////////////////////////////////////////////
 
@@ -180,7 +173,7 @@ void reduceParentheses(token& comingOP,  int& operatorTop){
 void check(token& tokens, int& optop){
         token topToken = stack[optop];
         precedenceInput input= mapToInput(tokens);
-        int op = PO_TABLE[mapToInput(topToken)][input];
+        int op = PO_TABLE[mapToInput(topToken)][input]; //Table usage.
         cout<<topToken.value<<" and incoming "<<tokens.value<<endl;
         
         switch (op)
@@ -223,7 +216,10 @@ void parseTokens(vector<token>& tokens) {
 
 
     
-    for( ;i <tokens.size(); i++){      
+    for( ;i <tokens.size(); i++){    
+
+        
+
         //if statement to help bypass CLASS PGM Name, until the { LB  is encoutered, as this indicates the start of the program, and and parsing can begin.
         if(tokens[i].value == "{" ){
             parsing = true; //Parsing can now begin
@@ -279,16 +275,13 @@ void parseTokens(vector<token>& tokens) {
                 continue;
             }
             if(tokens[i].classification == "RB"){
-                cout<<"RB"<<endl;
+                cout<<"RB in Right Brace statement"<<endl;
                 parseBlock(tokens[i],optop);
                 cout<<"tokens at the stop of the stack is:"<<stack[optop].value<<endl;
-                cout<<top<<topOfStack().value<<endl;
-                cout<<tokens[i].value<<endl;
-                cout<<stack[top].value<<endl;
+              
                 if(stack[top].value == "THEN" && stack[top-1].value == "IF" && tokens[i+1].value != "ELSE"){
                         popifThen(optop);
                 }
-                cout<<stack[top].value<<endl;
                 continue;
             }
             if(tokens[i].classification == "IF")
@@ -345,7 +338,7 @@ void parseTokens(vector<token>& tokens) {
             else{ //Automatically pushes NONTerminals to the Stack.
                 cout<<"Nonterminal added : ";
                 push(tokens[i]);
-                cout<<"HERE"<<endl;
+        
             }
         }
      } 
@@ -518,10 +511,10 @@ void doStatement(int& stackOperator, token& tokenRead){
 }
 string relopToOp(string relop){
     if(relop == ">") return "JLE";
-    if(relop == ">=") return "JLE";
+    if(relop == ">=") return "JL";
     if(relop == "==") return "JNE";
     if(relop == "<") return "JGE";
-    if(relop == "<=") return "JGE"; ///Need to check this again
+    if(relop == "<=") return "JG"; ///Need to check this again
     if(relop == "!=") return "JE"; // Need to check this again
     return "Unknown";
 
@@ -551,9 +544,11 @@ void printFixUpStack(){
         cout<<fixupStack[fixupTop]<<endl;
     }
 }
+//Resturns An Array of Quads.
 Quad* getQuadArray() {
     return myquad;
 }
+//Resturns the Quad Count
 int getQuadCount() {
     return quadCount;
 }

@@ -202,8 +202,10 @@ void codeSection(Quad* quad, int count){
                 ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
                 break;
             case('/'):
-                ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
-                ss<<"\tdiv\tword\t"<<"["<<arg2<<"]"<<"\n";
+                ss<<"\tmov dx,0\n";
+                ss<<"\tmov\tax,"<<"["<<arg1<<"]\n";
+                ss<<"\tmov\tcx,"<<"["<<arg2<<"]\n";
+                ss<<"\tdiv\tcx\n";
                 ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
                 break;
             case('>'):

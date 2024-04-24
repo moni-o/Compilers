@@ -1,6 +1,10 @@
 CLASS DIV{
     VAR A, C , ANSWER;
-    CIN A, C;
+    CIN A;
+    CIN C;
+    
+
+
     ANSWER = A / C ;
     COUT ANSWER;
 
