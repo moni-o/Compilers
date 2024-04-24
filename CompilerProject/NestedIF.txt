@@ -1,14 +1,14 @@
 CLASS NextedIF {
    
 IF A > B THEN {
-    IF C  == D THEN{
-       Y = X;
-    }
-    ELSE {
+    IF C == D THEN{
         Y = X;
-    }
-ELSE{
+        }
+    ELSE {
+        Y = Z;
+        }
+}ELSE{
     M = N;
-    }
-    }
-}
+  }
+COUT b;
+} 

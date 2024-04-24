@@ -281,7 +281,14 @@ void parseTokens(vector<token>& tokens) {
             if(tokens[i].classification == "RB"){
                 cout<<"RB"<<endl;
                 parseBlock(tokens[i],optop);
+                cout<<"tokens at the stop of the stack is:"<<stack[optop].value<<endl;
                 cout<<top<<topOfStack().value<<endl;
+                cout<<tokens[i].value<<endl;
+                cout<<stack[top].value<<endl;
+                if(stack[top].value == "THEN" && stack[top-1].value == "IF" && tokens[i+1].value != "ELSE"){
+                        popifThen(optop);
+                }
+                cout<<stack[top].value<<endl;
                 continue;
             }
             if(tokens[i].classification == "IF")
@@ -302,7 +309,7 @@ void parseTokens(vector<token>& tokens) {
                 continue;
             }
 
-            if(tokens[i].classification == "ELSE")
+            if(tokens[i].value == "ELSE")
             {
                 cout<<"Else"<<endl;
                 elseStatement(optop, tokens[i]);
@@ -345,6 +352,7 @@ void parseTokens(vector<token>& tokens) {
  }
     
 
+
 void parseBlock(token& tokens,int& topToken){
     int operation = PO_TABLE[mapToInput(stack[topToken])][mapToInput(tokens)];
     switch(operation){
@@ -366,16 +374,9 @@ void parseBlock(token& tokens,int& topToken){
             token y = pop();
             cout << "Popped: " << x.value << " " << y.value << endl;
             cout << "Current: " << stack[top].value << endl;
-            topToken = top;}
-        if(stack[top].value == "THEN" && stack[top-1].value == "IF"){
-            token x = pop();
-            token y = pop();
-            cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
-            cout<<"current: "<<stack[top].value<<endl;
-            addQuad(fixupStack[fixupTop]);
-            fixupTop--;
             topToken = top;
             }
+     
         if(stack[top].value == "ELSE" && stack[top-1].value == "THEN"){
             token x = pop();
             token y = pop();
@@ -412,7 +413,15 @@ string whileLable(){
     return "W" + to_string(++whileCount);
 }
 
-
+void popifThen(int& optop){
+token x = pop();
+    token y = pop();
+    cout<<"Popped: "<<x.value<<" "<<y.value<<endl;
+    cout<<"current: "<<stack[top].value<<endl;
+    addQuad(fixupStack[fixupTop]);
+    fixupTop--;
+    optop = top;
+}
 void ifStatement(token& tokens, int& topToken){
     int operation = PO_TABLE[mapToInput(stack[topToken])][mapToInput(tokens)];
     switch(operation){
@@ -462,6 +471,7 @@ void elseStatement(int& stackOperator, token& tokenRead){
             endStack[++endTop] = myquad[quadCount-1].arg1;
             cout<<"EndStack: "<<endStack[endTop]<<endl;
             addQuad(fixupStack[fixupTop]);
+            fixupTop--;
             break;
         case 3:
         break;
@@ -484,7 +494,6 @@ int operation = PO_TABLE[mapToInput(stack[optop])][mapToInput(tokens)];
         break;
     }
 }
-
 void doStatement(int& stackOperator, token& tokenRead){
     cout<<stack[stackOperator].value<<" and incoming "<<tokenRead.value<<endl;
     int relation = PO_TABLE[mapToInput(stack[stackOperator])][mapToInput(tokenRead)];

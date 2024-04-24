@@ -63,5 +63,9 @@ int main(int argc,char* argv[]){
 
    asmCode(symbol, quads, quadcount);
 
+
+        
+
+
     return 0;
 }

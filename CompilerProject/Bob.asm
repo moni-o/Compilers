@@ -73,24 +73,24 @@ Again:	call PrintString
 	mov	ax,[Temp1]
 	sub	ax,[Lit10]
 	mov	[Temp2],ax
+	mov	dx,0
 	mov	ax,[Temp2]
-	div	word	[Lit2]
+	mov	cx[Lit2]
+	div	cx
 	mov	[Temp3],ax
-	mov	dx,0
 	mov	ax,[Temp3]
-	mov	cx[Lit4]
-	mul	cx
+	mul	word	[Lit4]
 	mov	[Temp4],ax
-	mov	dx,0
 	mov	ax,[A]
-	mov	cx[Temp4]
-	mul	cx
+	mul	word	[Temp4]
 	mov	[Temp5],ax
 	mov	ax,[B]
 	add	ax,[C]
 	mov	[Temp6],ax
+	mov	dx,0
 	mov	ax,[Temp5]
-	div	word	[Temp6]
+	mov	cx[Temp6]
+	div	cx
 	mov	[Temp7],ax
 	mov	ax,[Temp7]
 	mov	[ANS],ax

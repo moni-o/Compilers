@@ -1,0 +1,23 @@
+CLASS Three {
+VAR A , B , C;
+
+CIN A;
+CIN B;
+CIN C;
+
+IF A > B THEN {
+    IF A > C THEN{
+        COUT A;
+        }
+    ELSE {
+        COUT C;
+        }
+}ELSE{
+    IF B > C THEN {
+        COUT B;
+    }
+    ELSE{
+        COUT C;
+    }
+  }
+} 

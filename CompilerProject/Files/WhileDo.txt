@@ -1,8 +1,10 @@
 CLASS WhileDo{
     VAR J;
-
+    CIN a;
 
     WHILE J < 10 DO {
         J = J + 1;
     }
+
+    COUT B;
 }

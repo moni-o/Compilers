@@ -67,6 +67,7 @@ void doStatement(int& optop, token& tokens);
 void printFixUpStack();
 string whileLable();
 void popWhileDo();
+void popifThen(int& optop);
 //Structure for Quads
 struct Quad{
     string op;

@@ -45,7 +45,11 @@ section	.bss
 section	.text
 
 _start:		nop
-Again:W1:	mov	ax,[J]
+Again:	call PrintString
+	call GetAnInteger
+	mov	ax,[ReadInt]
+	mov	[a],ax
+W1:	mov	ax,[J]
 	cmp	ax,[Lit10]
 	JGE	L1
 	mov	ax,[J]
@@ -55,6 +59,13 @@ Again:W1:	mov	ax,[J]
 	mov	[J],ax
 	JMP	W1
 L1:	NOP
+	mov	ax,[B]
+	call	ConvertIntegerToString
+	mov	eax,4
+	mov	ebx,1
+	mov	ecx,Result
+	mov	edx,ResultEnd
+	int	80h
 
 
 fini:

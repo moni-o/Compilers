@@ -28,6 +28,9 @@ section	.bss
 	ReadInt		RESW	1
 	tempint		RESW	1
 	negflag		RESB	1
+	A		RESW	1
+	B		RESW	1
+	C		RESW	1
 	Temp1		RESW	1
 	Temp2		RESW	1
 	Temp3		RESW	1
@@ -42,31 +45,64 @@ section	.bss
 section	.text
 
 _start:		nop
-Again:	mov	ax,[A]
+Again:	call PrintString
+	call GetAnInteger
+	mov	ax,[ReadInt]
+	mov	[A],ax
+	call PrintString
+	call GetAnInteger
+	mov	ax,[ReadInt]
+	mov	[B],ax
+	call PrintString
+	call GetAnInteger
+	mov	ax,[ReadInt]
+	mov	[C],ax
+	mov	ax,[A]
 	cmp	ax,[B]
 	JLE	L1
-	mov	ax,[C]
-	cmp	ax,[D]
-	JNE	L2
-	mov	ax,[X]
-	mov	[Y],ax
-	JMP	L3
-L2:	NOP
-	mov	ax,[Z]
-	mov	[Y],ax
-L3:	NOP
-	JMP	L4
-L1:	NOP
-	mov	ax,[N]
-	mov	[M],ax
-L4:	NOP
-	mov	ax,[b]
+	mov	ax,[A]
+	cmp	ax,[C]
+	JLE	L2
+	mov	ax,[A]
 	call	ConvertIntegerToString
 	mov	eax,4
 	mov	ebx,1
 	mov	ecx,Result
 	mov	edx,ResultEnd
 	int	80h
+	JMP	L3
+L2:	NOP
+	mov	ax,[C]
+	call	ConvertIntegerToString
+	mov	eax,4
+	mov	ebx,1
+	mov	ecx,Result
+	mov	edx,ResultEnd
+	int	80h
+L3:	NOP
+	JMP	L4
+L1:	NOP
+	mov	ax,[B]
+	cmp	ax,[C]
+	JLE	L5
+	mov	ax,[B]
+	call	ConvertIntegerToString
+	mov	eax,4
+	mov	ebx,1
+	mov	ecx,Result
+	mov	edx,ResultEnd
+	int	80h
+	JMP	L6
+L5:	NOP
+	mov	ax,[C]
+	call	ConvertIntegerToString
+	mov	eax,4
+	mov	ebx,1
+	mov	ecx,Result
+	mov	edx,ResultEnd
+	int	80h
+L6:	NOP
+L4:	NOP
 
 
 fini:

@@ -1,0 +1,10 @@
+CLASS NESTEDWHILE{
+    VAR A, C , D;
+    WHILE A > C  DO {
+        WHILE C < B DO{
+            C = C + 1
+        }
+        A = A -1
+    }
+    COUT L
+}
