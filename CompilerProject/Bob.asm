@@ -73,10 +73,8 @@ Again:	call PrintString
 	mov	ax,[Temp1]
 	sub	ax,[Lit10]
 	mov	[Temp2],ax
-	mov	dx,0
 	mov	ax,[Temp2]
-	mov	cx[Lit2]
-	div	cx
+	div	word	[Lit2]
 	mov	[Temp3],ax
 	mov	ax,[Temp3]
 	mul	word	[Lit4]
@@ -87,10 +85,8 @@ Again:	call PrintString
 	mov	ax,[B]
 	add	ax,[C]
 	mov	[Temp6],ax
-	mov	dx,0
 	mov	ax,[Temp5]
-	mov	cx[Temp6]
-	div	cx
+	div	word	[Temp6]
 	mov	[Temp7],ax
 	mov	ax,[Temp7]
 	mov	[ANS],ax

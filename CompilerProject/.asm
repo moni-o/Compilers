@@ -20,7 +20,6 @@ section	.data
 	ResultEnd	equ	$-Result
 	num	times 6 db'ABCDEF'
 	numEnd		equ	$-num
-	Lit1	DW	1
 
 
 section	.bss
@@ -29,9 +28,6 @@ section	.bss
 	ReadInt		RESW	1
 	tempint		RESW	1
 	negflag		RESB	1
-	ROW		RESW	1
-	I		RESW	1
-	J		RESW	1
 	Temp1		RESW	1
 	Temp2		RESW	1
 	Temp3		RESW	1
@@ -46,42 +42,7 @@ section	.bss
 section	.text
 
 _start:		nop
-Again:	mov	ax,[Lit1]
-	mov	[I],ax
-	call PrintString
-	call GetAnInteger
-	mov	ax,[ReadInt]
-	mov	[ROW],ax
-W1:	mov	ax,[I]
-	cmp	ax,[ROW]
-	JGE	L1
-	mov	ax,[Lit1]
-	mov	[J],ax
-W2:	mov	ax,[J]
-	cmp	ax,[I]
-	JGE	L2
-	mov	ax,[J]
-	call	ConvertIntegerToString
-	mov	eax,4
-	mov	ebx,1
-	mov	ecx,Result
-	mov	edx,ResultEnd
-	int	80h
-	mov	ax,[J]
-	add	ax,[Lit1]
-	mov	[Temp1],ax
-	mov	ax,[Temp1]
-	mov	[J],ax
-	JMP	W2
-L2:	NOP
-	mov	ax,[I]
-	add	ax,[Lit1]
-	mov	[Temp1],ax
-	mov	ax,[Temp1]
-	mov	[I],ax
-	JMP	W1
-L1:	NOP
-
+Again:
 
 fini:
 	mov	eax,sys_exit

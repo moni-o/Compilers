@@ -1,0 +1,5 @@
+CLASS IF2{
+    VAR A, B , C ,D;
+    CIN A, B,
+
+}

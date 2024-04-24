@@ -1,10 +1,26 @@
 CLASS NESTEDWHILE{
-    VAR A, C , D;
-    WHILE A > C  DO {
-        WHILE C < B DO{
-            C = C + 1
+
+
+    VAR ROW, I, J;
+    I = 1;
+
+    CIN ROW;
+    
+
+    
+    WHILE  I <= ROW DO {
+
+        J = 1;
+
+
+
+        WHILE J <= I DO{
+            
+            COUT J;
+            J = J + 1;
         }
-        A = A -1
+    
+        I = I + 1;
     }
-    COUT L
+    
 }
