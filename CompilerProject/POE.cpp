@@ -4,6 +4,9 @@
 using namespace std;
 
 
+//The 1 means yields, 2 means equal,3 means takes precedence, 
+
+
 int PO_TABLE[predence_count][predence_count];
 
 void ini_PO_TABLE(){
@@ -11,8 +14,7 @@ void ini_PO_TABLE(){
     
      //Terminator row
      PO_TABLE[terminator][assignment]= 1;
-     PO_TABLE[terminator][left_brace]= 1; ///////Might delete later
-
+     PO_TABLE[terminator][left_brace]= 1; 
 
      //Assigment row
      PO_TABLE[assignment][terminator]= 3;

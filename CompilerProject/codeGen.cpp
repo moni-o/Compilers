@@ -5,14 +5,15 @@
 
 stringstream ss;
 
-void asmCode(vector<SymbolTable_Entries>& Symbol, Quad* quads, int quadsCount){
+//For readibility and organization, I have created a function for each section of the code, ascode function contains all the functions within it. 
+void linuxAssembly(vector<SymbolTable_Entries>& Symbol, Quad* quads, int quadsCount){
     string filename;
-    linuxCongfig();
-    filename = dataSection(Symbol);
+    linuxCongfig(); //This function contains the linux configuration for the x86 code
+    filename = dataSection(Symbol); //This function contains the data section of the x86 code, returns the file name since ill be needing it for the fileX86 function
     cout<<filename<<endl;
     filename = filename + ".asm";
-    bssSection(Symbol);
-    codeSection(quads, quadsCount);
+    bssSection(Symbol); //This function contains the bss section 
+    codeSection(quads, quadsCount); //this function contains the code section
 
     ss<<"fini:\n";
     ss<<"\tmov\teax,sys_exit\n";
@@ -176,10 +177,10 @@ void codeSection(Quad* quad, int count){
         string result = quad[i].result;
 
          if (isNumericLiteral(arg1)) {
-            arg1 = "Lit" + arg1;  // Prefix numeric literals
+            arg1 = "Lit" + arg1;  
         }
         if (isNumericLiteral(arg2)) {
-            arg2 = "Lit" + arg2;  // Prefix numeric literals
+            arg2 = "Lit" + arg2;  
         }
 
 
@@ -208,11 +209,11 @@ void codeSection(Quad* quad, int count){
                 ss<<"\tdiv\tcx\n";
                 ss<<"\tmov\t"<<"["<<result<<"]"<<",ax\n";
                 break;
-            case('>'):
+            case('>'): 
                 ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
                 ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
                 break;
-            case('<'):
+            case('<'): //Relized all of them have the same structure, < , >, <=, >=
                 ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
                 ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
                 break;
@@ -257,6 +258,7 @@ void codeSection(Quad* quad, int count){
                     ss<<arg1<<":";
                     break;
                 }
+                //This Had to assess the first and second, to determine if it was a W label oppose to a while loop, Due to 0 index in both being W.
                 if(quad[i].op.substr(0,1) == "W" && OP != "WHILE"){
                     ss<<"\tJMP\t"<<OP<<"\n";
                      break;
@@ -286,12 +288,12 @@ bool isNumericLiteral(const string& str) {
     return !str.empty() && all_of(str.begin(), str.end(), ::isdigit);
 }
 
-
+//Used to write to file
 void fileX86(const string& filename){
     ofstream file;
     file.open(filename);
     if(!file){
-       cerr<<"Error: File not found\n";
+       cerr<<"Erro\n";
     }
     else{
         file<<ss.str();

@@ -61,7 +61,7 @@ int main(int argc,char* argv[]){
        cout<<token.symbol<<std::right<<setw(x)<<token.classi<<setw(x)<<token.val<<setw(x)<<token.addr<<setw(x)<<token.seg<<endl;
     }
 
-   asmCode(symbol, quads, quadcount);
+   linuxAssembly(symbol, quads, quadcount);
 
 
         

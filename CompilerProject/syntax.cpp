@@ -13,7 +13,7 @@ int tempCount = 0;
 int lableCount =0;
 int whileCount = 0;
 token stack[maxSize];
-Quad myquad[100];
+Quad myquad[maxSize];
 string fixupStack[MAXFIXUP];
 string endStack[MAXEND];
 int endTop = -1;
@@ -23,7 +23,6 @@ int fixupTop = -1;
 void push(token token) {
     if (top >= maxSize - 1) {
         cerr << "Stack overflow" <<endl;
-        exit(EXIT_FAILURE);
     }
     cout<<"pushing: "<<token.value<<" "<<token.classification<<endl;;
     stack[++top] = token;
@@ -35,15 +34,13 @@ token pop(int index = -1) {
     {    // Pop the top element
         if (top < 0) {
             cerr << "Stack underflow" << endl;
-            exit(EXIT_FAILURE);
         }
       
         return stack[top--];
     } else {
         // Pop from a specific index
         if (index < 0 || index > top) {
-            cerr << "Index out ofyyy range" << endl;
-            exit(EXIT_FAILURE);
+            cerr << "Index out of range" << endl;
         }
         token poppedToken = stack[index];
         // Shift elements to remove the token at the specified index
@@ -91,6 +88,7 @@ bool isOperatorToken(precedenceInput type) {
     }
 }
 
+//Based on the token type, it tells me what input it is in the precedence table, I kept my table in the same order as the enum, so I can use the enum as an index
 precedenceInput mapToInput(token& token){
     if(token.value == "=")return assignment;
     if(token.value == "+")return plus_input;
@@ -133,7 +131,7 @@ void addToFixUp(string label ="?"){
 string generateTemp() {
         return "Temp" + to_string(++tempCount);  // Increment and return a new temp variable name
     }
-
+//This is used to handle the reduction of the stack, when the operator is of lower precedence than the incoming token
 void handleReduction(int& optop) {
     string ope = pop(optop).value;  // Pop the operator
     string arg2 = pop().value;  // Pop the right operand
@@ -157,7 +155,7 @@ void handleReduction(int& optop) {
 
     }
 }
-
+//Since ( ) have to be pop together but keep the value of it in the stack, I had to create a special function to handle this.
 void reduceParentheses(token& comingOP,  int& operatorTop){
     token topToken = stack[operatorTop];
     cout<<"HERE"<<endl;
@@ -171,9 +169,9 @@ void reduceParentheses(token& comingOP,  int& operatorTop){
 }
 
 void check(token& tokens, int& optop){
-        token topToken = stack[optop];
-        precedenceInput input= mapToInput(tokens);
-        int op = PO_TABLE[mapToInput(topToken)][input]; //Table usage.
+        token topToken = stack[optop]; //Get the top Operator of the stack
+        precedenceInput input= mapToInput(tokens); //Map the incoming token to the precedence table
+        int op = PO_TABLE[mapToInput(topToken)][input]; //gives me if the top token should yield, equal or reduce to the incoming token
         cout<<topToken.value<<" and incoming "<<tokens.value<<endl;
         
         switch (op)
@@ -186,10 +184,10 @@ void check(token& tokens, int& optop){
         
         case 3:cout<<"Need to reduce: "<<endl;
                 if(topToken.classification == "RP"){
-                    reduceParentheses(tokens, optop);
+                    reduceParentheses(tokens, optop); //Special case for Parentheses
                 }
                 else{
-                    handleReduction(optop);
+                    handleReduction(optop); //Normal Reduction
                     
                 }
                 if(stack[optop].classification != "terminator"){
@@ -242,8 +240,9 @@ void parseTokens(vector<token>& tokens) {
                 }
                 continue;
 
-            //The If statmetns below, are just to classifiy the tokens, but the check functions is the one that does the TABLE Driven approach,
-            //This was done for better readability and undestanding for me, regarding the flow on how the code should be handled
+            //The If statmetns below, are just to classifiy the tokens, since IF, Else, Then While, Do, have special hadleling when they are being pushed into the stack
+             //but the check functions is the one that does the TABLE Driven approach, alot of the if statements below used the same function, to check top of stack operator and incoming token.
+            //This was done for better readability and undestanding for me, regarding the flow on how the code should be handled. I could of group them together and not repeat the code.
 
             }
             if(tokens[i].classification == "assign")
@@ -278,6 +277,7 @@ void parseTokens(vector<token>& tokens) {
                 cout<<"RB in Right Brace statement"<<endl;
                 parseBlock(tokens[i],optop);
                 cout<<"tokens at the stop of the stack is:"<<stack[optop].value<<endl;
+                //Due to that {}brace are popped, Need to decide if then should be pop or not 
               
                 if(stack[top].value == "THEN" && stack[top-1].value == "IF" && tokens[i+1].value != "ELSE"){
                         popifThen(optop);
@@ -361,7 +361,7 @@ void parseBlock(token& tokens,int& topToken){
 
 
             break;
-    }
+    }   //Since the the Right brace, can mean end of a block, or end of the program, I needed to furhter check. The 
         if (stack[top-1].value == "{" && stack[top].value == "}") {
             token x = pop();
             token y = pop();
@@ -514,8 +514,8 @@ string relopToOp(string relop){
     if(relop == ">=") return "JL";
     if(relop == "==") return "JNE";
     if(relop == "<") return "JGE";
-    if(relop == "<=") return "JG"; ///Need to check this again
-    if(relop == "!=") return "JE"; // Need to check this again
+    if(relop == "<=") return "JG"; 
+    if(relop == "!=") return "JE"; 
     return "Unknown";
 
 }

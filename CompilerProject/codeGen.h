@@ -11,7 +11,7 @@ using namespace std;
 
 
 
-void asmCode(vector<SymbolTable_Entries>& Symbol, Quad* q, int count);
+void linuxAssembly(vector<SymbolTable_Entries>& Symbol, Quad* q, int count);
 
 void linuxCongfig();
 string dataSection(vector<SymbolTable_Entries>& Symbol);
