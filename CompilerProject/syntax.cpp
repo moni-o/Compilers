@@ -211,8 +211,11 @@ void parseTokens(vector<token>& tokens) {
     push(token{"$","terminator"}); //Pushing the EOF token
     optop = top;//since the terminator was pushed,this is currently the top operator but also the top of the stack, 
 
-
-
+    //Program first token Should be CLASS, if not then the program is invalid, and no parsing should be done.
+    if(tokens[i].classification != "CLASS"){
+        cerr<<"Error: Invalid Program, CLASS Missing"<<endl;
+        exit(EXIT_FAILURE);
+    }
     
     for( ;i <tokens.size(); i++){    
 

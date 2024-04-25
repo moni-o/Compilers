@@ -1,4 +1,4 @@
- CLASS Pgm1 {
+CLASS  {
 	
 	CONST  M = 7,  N = 85;
 	VAR  X, Y, Z;

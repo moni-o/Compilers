@@ -9,7 +9,14 @@ stringstream ss;
 void linuxAssembly(vector<SymbolTable_Entries>& Symbol, Quad* quads, int quadsCount){
     string filename;
     linuxCongfig(); //This function contains the linux configuration for the x86 code
-    filename = dataSection(Symbol); //This function contains the data section of the x86 code, returns the file name since ill be needing it for the fileX86 function
+    filename = dataSection(Symbol);
+    
+    if(filename.empty()){
+        cerr<<"Error: No Program Name Found\n";
+        exit(EXIT_FAILURE);
+    }
+    
+     //This function contains the data section of the x86 code, returns the file name since ill be needing it for the fileX86 function
     cout<<filename<<endl;
     filename = filename + ".asm";
     bssSection(Symbol); //This function contains the bss section 
