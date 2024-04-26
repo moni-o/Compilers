@@ -1,7 +1,8 @@
 #include "codeGen.h"
 #include<iostream>
 #include<cctype>
-#include<algorithm>
+
+
 
 stringstream ss;
 
@@ -220,7 +221,7 @@ void codeSection(Quad* quad, int count){
                 ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
                 ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
                 break;
-            case('<'): //Relized all of them have the same structure, < , >, <=, >=
+            case('<'): //Relized all of them have the same structure, < , >, <=, >=, and included what the first quad of IF would had.
                 ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
                 ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
                 break;
@@ -243,7 +244,7 @@ void codeSection(Quad* quad, int count){
                     ss<<"\tmov\tedx,ResultEnd\n";
                     ss<<"\tint\t80h\n";
                 }
-                if(quad[i].op == "THEN"){
+                if(quad[i].op == "THEN"){ // first argm the jump statmetn, second is the label
                     ss<<"\t"<<arg2<<"\t"<<arg1<<"\n";
                     break;
                 }
@@ -257,11 +258,16 @@ void codeSection(Quad* quad, int count){
                     ss<<"\tmov\t"<<"["<<arg1<<"]"<<",ax\n";
                     break;
                 }
-                if(quad[i].op == "ELSE"){
+                if(quad[i].op == "!="){
+                    ss<<"\tmov\tax,"<<"["<<arg1<<"]"<<"\n";
+                    ss<<"\tcmp\tax,"<<"["<<arg2<<"]"<<"\n";
+                    break;
+                }
+                if(quad[i].op == "ELSE"){ 
                     ss<<"\tJMP\t"<<arg1<<"\n";
                     break;
                 }
-                if(quad[i].op == "WHILE"){
+                if(quad[i].op == "WHILE"){ //While has it own label, so it nees its own if statemetn .
                     ss<<arg1<<":";
                     break;
                 }
@@ -292,7 +298,17 @@ void codeSection(Quad* quad, int count){
 }
 
 bool isNumericLiteral(const string& str) {
-    return !str.empty() && all_of(str.begin(), str.end(), ::isdigit);
+     if (str.empty()) {
+        return false;
+    }
+
+    for (int i = 0; i < str.size(); i++) {
+        if (!isdigit(str[i])) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 //Used to write to file
@@ -300,7 +316,7 @@ void fileX86(const string& filename){
     ofstream file;
     file.open(filename);
     if(!file){
-       cerr<<"Erro\n";
+       cerr<<"Error\n";
     }
     else{
         file<<ss.str();

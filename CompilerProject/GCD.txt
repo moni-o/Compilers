@@ -1,0 +1,15 @@
+CLASS GCD{
+    VAR FIRST,SECOND;
+    CIN FIRST;
+    CIN SECOND;
+
+    WHILE FIRST != SECOND DO {
+        IF FIRST > SECOND THEN{
+            FIRST = FIRST - SECOND;
+        }
+        ELSE {
+            SECOND = SECOND - FIRST
+        }
+    }
+    COUT FIRST;
+}

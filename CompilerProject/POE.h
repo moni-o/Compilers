@@ -58,7 +58,6 @@ void printQuads();
 void handleReduction(int& optop);
 void reduceParentheses(token& comingOP,  int& operatorTop);
 void ifStatement(token& tokens, int& topToken);
-//void relop(token& tokens, int& topToken);
 string relopToOp(string relop);
 void thenStatement(token& tokens,int& topToken);
 void elseStatement(int& topToken,token& tokens);

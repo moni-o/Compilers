@@ -42,10 +42,10 @@ int main(int argc,char* argv[]){
 
   
 
-   vector<token> tokens =tokenizer(input);
-    for(const auto& token: tokens){
-        cout<<token.value<<" type: "<< token.classification<<endl;
-    };
+   vector<token>tokens =tokenizer(input);
+    // for(const auto& token: tokens){
+    //     cout<<token.value<<" type: "<< token.classification<<endl;
+    // };
 
     vector<SymbolTable_Entries> symbol = SymbolTable(tokens);
     ini_PO_TABLE();
@@ -56,10 +56,10 @@ int main(int argc,char* argv[]){
     
     
 
-    cout<<"Symbol"<<setw(x-2)<<" Classification"<<setw(x)<<" Value"<<setw(x)<<" Address"<<setw(x)<<" Segment"<<endl;
-     for(const auto& token: symbol){
-       cout<<token.symbol<<std::right<<setw(x)<<token.classi<<setw(x)<<token.val<<setw(x)<<token.addr<<setw(x)<<token.seg<<endl;
-    }
+    // cout<<"Symbol"<<setw(x-2)<<" Classification"<<setw(x)<<" Value"<<setw(x)<<" Address"<<setw(x)<<" Segment"<<endl;
+    //  for(const auto& token: symbol){
+    //    cout<<token.symbol<<std::right<<setw(x)<<token.classi<<setw(x)<<token.val<<setw(x)<<token.addr<<setw(x)<<token.seg<<endl;
+    // }
 
    linuxAssembly(symbol, quads, quadcount);
 
